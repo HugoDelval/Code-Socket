@@ -49,10 +49,18 @@ public class EchoClient {
             // On lit ce qu'on reçoie du serveur
         	System.out.println("echo: " + socIn.readLine());
         }
+        deconnecter();
+    }
+
+    public void deconnecter(){
         socOut.close();
-        socIn.close();
-        stdIn.close();
-        echoSocket.close();
+        try {
+            socIn.close();
+            stdIn.close();
+            echoSocket.close();
+        } catch (IOException e) {
+            System.out.println("Erreur deconnexion client : "+e);
+        }
     }
 }
 

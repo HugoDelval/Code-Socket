@@ -6,9 +6,9 @@ package stream;
 public class ChatServeur {
     private EchoServerMultiThreaded monServeur;
 
-    ChatServeur(EchoServerMultiThreaded serv)
+    ChatServeur(String port)
     {
-        monServeur=serv;
+        monServeur=new EchoServerMultiThreaded(port);
     }
 
     public void lancer(){
@@ -21,7 +21,7 @@ public class ChatServeur {
             System.out.println("Un argument en entrée : le numéro de port du serveur.");
             System.exit(1);
         }
-        ChatServeur chatServeur =new ChatServeur(new EchoServerMultiThreaded(args[0]));
+        ChatServeur chatServeur =new ChatServeur(args[0]);
         chatServeur.lancer();
     }
 }

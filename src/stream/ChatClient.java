@@ -8,9 +8,9 @@ import java.io.IOException;
 public class ChatClient {
     private EchoClient monClient;
 
-    ChatClient(EchoClient client)
+    ChatClient(String adresseIP, String port)
     {
-        monClient=client;
+        monClient=new EchoClient(adresseIP,port);
     }
 
     public void lancer(){
@@ -31,7 +31,7 @@ public class ChatClient {
             System.out.println("Deux arguments en entrée : l'adresse ip du serveur suivit du numéro de port du serveur.");
             System.exit(1);
         }
-        ChatClient chatClient =new ChatClient(new EchoClient(args[0],args[1]));
+        ChatClient chatClient =new ChatClient(args[0],args[1]);
         chatClient.lancer();
     }
 }

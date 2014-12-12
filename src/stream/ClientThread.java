@@ -13,9 +13,22 @@ import java.net.*;
 public class ClientThread extends Thread {
 	
 	private Socket clientSocket;
-	
-	ClientThread(Socket s) {
-		this.clientSocket = s;
+	private EchoServerMultiThreaded parent;
+	// Flux d'entrée du point de vue Client
+	BufferedReader socIn = null;
+	// Flux de sortie du point de vue Client
+	PrintStream socOut = null;
+
+	ClientThread(Socket s, EchoServerMultiThreaded p) {
+		try {
+			this.clientSocket = s;
+			socIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			socOut = new PrintStream(clientSocket.getOutputStream());
+			parent = p;
+		} catch (IOException e) {
+			System.out.println("Erreur construction client du cote serveur : "+e);
+		}
+
 	}
 
  	/**
@@ -24,22 +37,32 @@ public class ClientThread extends Thread {
   	**/
 	public void run() {
 		try {
-			// Flux d'entrée du point de vue Client
-    		BufferedReader socIn = null;
-    		socIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			// Flux de sortie du point de vue Client
-    		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
     		while (true) {
 				// Récupération de ce que le client a écrit
 				String line = socIn.readLine();
-				// Envoie vers le serveur
-    		  	socOut.println(line);
+				// Renvoie de la meme chose
+				parent.envoyerInfo(line);
     		}
     	}catch (Exception e) {
-        	System.err.println("Error in EchoServer:" + e); 
+        	System.err.println("Error in ClientThread:" + e);
         }
 	}
-  
-  }
+
+	public void envoyerInfo(String info)
+	{
+		socOut.println(info);
+	}
+
+	public void deconnecter(){
+		System.out.println("Deconnection ClientThread");
+		try {
+			socOut.close();
+			socIn.close();
+			clientSocket.close();
+		} catch (IOException e) {
+			System.out.println("erreur de fermeture de client cote serveur : " + e);
+		}
+	}
+}
 
   
