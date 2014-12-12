@@ -35,8 +35,10 @@ public class EchoClient {
       	    echoSocket = new Socket(args[0],new Integer(args[1]).intValue());
             // Création d'un buffer qui va stocker ce qu'on recoie du serveur
 	        socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-	    socOut= new PrintStream(echoSocket.getOutputStream());
-	    stdIn = new BufferedReader(new InputStreamReader(System.in));
+            // Création d'un buffer qui va stocker ce qu'on veut envoyer au serveur
+	        socOut= new PrintStream(echoSocket.getOutputStream());
+            // Création d'un buffer qui va stocker ce qu'on tape dans la console
+	        stdIn = new BufferedReader(new InputStreamReader(System.in));
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + args[0]);
             System.exit(1);

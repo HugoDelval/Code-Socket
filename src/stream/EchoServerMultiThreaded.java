@@ -20,6 +20,7 @@ public class EchoServerMultiThreaded  {
   	**/
 	EchoServerMultiThreaded(String port){
 		try {
+			// Création d'un Socket pour écouter les demandes de connexion sur le serveur
 			listenSocket = new ServerSocket(Integer.parseInt(port)); //port
 		} catch (IOException e) {
 			System.err.println("Erreur de construction de EchoServerMultiThreaded :" + e);
@@ -30,9 +31,11 @@ public class EchoServerMultiThreaded  {
 	public void lancerServeur(){
 		System.out.println("Server ready...");
 		try {
+			// Ecoute infinie pour savoir si un client se connecte au serveur
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
 				System.out.println("Connexion from:" + clientSocket.getInetAddress());
+				// Création d'un thread par client (communication unique pour chaque client)
 				ClientThread ct = new ClientThread(clientSocket);
 				ct.start();
 			}
