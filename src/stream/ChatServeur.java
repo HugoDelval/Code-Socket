@@ -15,7 +15,6 @@ public class ChatServeur {
         monServeur.lancerServeur();
     }
 
-//com
     public static void main(String[] args){
         // premier argument = port du serveur
         if(args.length != 1){
@@ -25,5 +24,4 @@ public class ChatServeur {
         ChatServeur chatServeur =new ChatServeur(new EchoServerMultiThreaded(args[0]));
         chatServeur.lancer();
     }
-
 }
