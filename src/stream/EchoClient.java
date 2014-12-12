@@ -31,7 +31,7 @@ public class EchoClient {
         }
 
         try {
-      	    // Création d'une connexion entre le client et le serveur
+      	    // Création d'une connexion entre le client et le serveur : précision d'une adresse et d'un port
       	    echoSocket = new Socket(args[0],new Integer(args[1]).intValue());
 	    socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
 	    socOut= new PrintStream(echoSocket.getOutputStream());
