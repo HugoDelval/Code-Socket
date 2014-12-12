@@ -16,6 +16,8 @@ public class EchoServerMultiThreaded  {
 	private ClientThread[] mesClients;
 	private int numClient;
 	private boolean plein;
+	private final String NOM_FICHIER="sauvegarde_conversations.txt";
+	private PrintWriter writer;
  	/**
   	* main method
 	* @param EchoServer port
@@ -31,9 +33,17 @@ public class EchoServerMultiThreaded  {
 		mesClients=new ClientThread[100];
 		numClient=-1;
 		plein=false;
+		try {
+			writer = new PrintWriter(NOM_FICHIER, "UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void envoyerInfo(String info){
+		writer.println(info);
 		if(plein){
 			for(int i=0; i<mesClients.length ; i++){
 				mesClients[i].envoyerInfo(info);
@@ -69,6 +79,7 @@ public class EchoServerMultiThreaded  {
 				// penser a notifier le client !
 				mesClients[numClient]=ct;
 				ct.start();
+				ct
 			}
 		}catch (Exception e) {
 			System.err.println("Erreur lors de l'execution du serveur :" + e);
