@@ -24,12 +24,16 @@ public class ClientThread extends Thread {
   	**/
 	public void run() {
 		try {
+			// Flux d'entrée du point de vue Client
     		BufferedReader socIn = null;
     		socIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			// Flux de sortie du point de vue Client
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
     		while (true) {
-    		  String line = socIn.readLine();
-    		  socOut.println(line);
+				// Lecture de ce qu'on écrit sur la console
+				String line = socIn.readLine();
+				// Envoie vers le serveur
+    		  	socOut.println(line);
     		}
     	}catch (Exception e) {
         	System.err.println("Error in EchoServer:" + e); 

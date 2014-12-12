@@ -50,9 +50,12 @@ public class EchoClient {
                              
         String line;
         while (true) {
+            // On lit ce qu'on met en console
         	line=stdIn.readLine();
         	if (line.equals(".")) break;
+            // On envoie au serveur
         	socOut.println(line);
+            // On lit ce qu'on reçoie du serveur
         	System.out.println("echo: " + socIn.readLine());
         }
       socOut.close();
