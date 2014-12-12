@@ -30,7 +30,7 @@ public class ClientThread extends Thread {
 			// Flux de sortie du point de vue Client
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
     		while (true) {
-				// Lecture de ce qu'on écrit sur la console
+				// Récupération de ce que le client a écrit
 				String line = socIn.readLine();
 				// Envoie vers le serveur
     		  	socOut.println(line);
