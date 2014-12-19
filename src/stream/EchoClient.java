@@ -8,7 +8,11 @@ package stream;
 
 import java.io.*;
 import java.net.*;
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class EchoClient extends Thread {
@@ -19,6 +23,7 @@ public class EchoClient extends Thread {
     private InterfaceClient interfaceC;
     private String nomUtilisateur="";
     private boolean connected=false;
+    private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
 
     EchoClient(String adresseIP, String port, InterfaceClient interC){
         try {
@@ -43,44 +48,48 @@ public class EchoClient extends Thread {
     public void run() {
         try {
             while (true) {
-                // Récupération du nom d'utilisateur qui envoie l'info
-                String user = socIn.readLine();
-                // Renvoie de la meme chose
-                if(interfaceC != null && !user.isEmpty()){
-                    // Récupération de la commande de l'utilisateur
-                    String commandeUtilisateur = socIn.readLine();
-                    // traiter commande utilisateur
-                    if(interfaceC != null && !commandeUtilisateur.isEmpty()){
-                        // Traiter ce qui est reçu par ClientThread (commandeUtilisateur)
-                        if (commandeUtilisateur.contains("SIGNIN ")) {
-                            String userSigning = commandeUtilisateur.substring(7);
-                            if(userSigning.equals(nomUtilisateur)){
-                                connected=true;
-                            }
-                            socOut.println("server > all : " +userSigning+ " signed in.");
+                // Récupération de la commande de l'utilisateur
+                String commandeUtilisateur = socIn.readLine();
+                // traiter commande utilisateur
+                if(interfaceC != null && !commandeUtilisateur.isEmpty()){
+                    // Traiter ce qui est reçu par ClientThread (commandeUtilisateur)
+                    if (commandeUtilisateur.contains("SIGNIN ")) {
+                        String userSigning = commandeUtilisateur.substring(7);
+                        if(userSigning.equals(nomUtilisateur)){
+                            connected=true;
+                            userSigning = "You've";
+                            envoyerHistorique();
                         }
-                    }
-                    if(connected){
-                        if (commandeUtilisateur.contains("SIGNOUT ")) {
-                            String userSignout = commandeUtilisateur.substring(8);
-                            if(userSignout.equals(nomUtilisateur)){
-                                connected=false;
-                            }
-                            socOut.println("server > all : " +userSignout+ " signed out.");
-                        }
-                        if(commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")){
-                            String expediteur = commandeUtilisateur.substring(13);
-                            String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ")+4,commandeUtilisateur.indexOf(" CONTENT "));
-                            if(expediteur.equals(nomUtilisateur))
-                                expediteur = "me";
-                            if(destinataire.equals(nomUtilisateur))
-                                expediteur = "me";
-                            String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ")+8);
-                            socOut.println(expediteur+" > "+destinataire+" : " +msg);
+                        if(connected) {
+                            String ligne = "server > all : " + userSigning + " signed in.\n";
+                            interfaceC.envoyerInfo(ligne);
+                            sauvegarderLigne(ligne);
                         }
                     }
                 }
-
+                if(connected){
+                    if (commandeUtilisateur.contains("SIGNOUT ")) {
+                        String userSignout = commandeUtilisateur.substring(8);
+                        if(userSignout.equals(nomUtilisateur)){
+                            connected=false;
+                        }
+                        String ligne = "server > all : " + userSignout + " signed out.\n";
+                        interfaceC.envoyerInfo(ligne);
+                        sauvegarderLigne(ligne);
+                    }
+                    if(commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")){
+                        String expediteur = commandeUtilisateur.substring(13);
+                        String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ")+4,commandeUtilisateur.indexOf(" CONTENT "));
+                        if(expediteur.equals(nomUtilisateur))
+                            expediteur = "me";
+                        if(destinataire.equals(nomUtilisateur))
+                            expediteur = "me";
+                        String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ")+8);
+                        String ligne = expediteur+" > "+destinataire+" : " +msg+'\n';
+                        interfaceC.envoyerInfo(ligne);
+                        sauvegarderLigne(ligne);
+                    }
+                }
             }
         }catch (Exception e) {
             System.err.println("Error in ClientThread:" + e);
@@ -91,6 +100,7 @@ public class EchoClient extends Thread {
     public void deconnecter(){
         socOut.close();
         try {
+            envoyerServeur("QUIT");
             socIn.close();
             echoSocket.close();
         } catch (IOException e) {
@@ -126,6 +136,37 @@ public class EchoClient extends Thread {
             socOut.println(retour);
         }
     }
+
+    private void envoyerHistorique() {
+        try {
+            List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
+            Iterator iterator = fichierHistorique.iterator();
+            String cmd;
+            while (iterator.hasNext()) {
+                cmd = (String)iterator.next();
+                interfaceC.envoyerInfo(cmd + '\n');
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sauvegarderLigne(String ligne){
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
+            writer.println(ligne);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
 
 
