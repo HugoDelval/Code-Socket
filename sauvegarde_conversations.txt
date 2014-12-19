@@ -1,1 +1,8 @@
-SIGNIN username
+server > all : username signed in.
+server > all : hugo signed in.
+server > all : hugo signed in.
+server > all : username signed in.
+server > all : hugo2 signed in.
+server > all : hugo2 signed in.
+server > all : kjdb signed in.
+server > all : kjdb signed out.

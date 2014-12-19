@@ -57,13 +57,16 @@ public class EchoClient extends Thread {
                         String userSigning = commandeUtilisateur.substring(7);
                         if(userSigning.equals(nomUtilisateur)){
                             connected=true;
-                            userSigning = "You've";
                             envoyerHistorique();
                         }
                         if(connected) {
-                            String ligne = "server > all : " + userSigning + " signed in.\n";
-                            interfaceC.envoyerInfo(ligne);
-                            sauvegarderLigne(ligne);
+                            //interfaceC.envoyerInfo(ligne);
+                            interfaceC.envoyerInfo("------- Debut de votre connection -------");
+                            sauvegarderLigne( "server > all : " + userSigning + " signed in.\n");
+                            if(userSigning.equals(nomUtilisateur)){
+                                userSigning = "You've";
+                            }
+                            interfaceC.envoyerInfo( "server > all : " + userSigning + " signed in.\n");
                         }
                     }
                 }
@@ -73,21 +76,22 @@ public class EchoClient extends Thread {
                         if(userSignout.equals(nomUtilisateur)){
                             connected=false;
                         }
-                        String ligne = "server > all : " + userSignout + " signed out.\n";
-                        interfaceC.envoyerInfo(ligne);
-                        sauvegarderLigne(ligne);
+                        sauvegarderLigne( "server > all : " + userSignout + " signed out.\n");
+                        if(userSignout.equals(nomUtilisateur)){
+                            userSignout = "You've";
+                        }
+                        interfaceC.envoyerInfo( "server > all : " + userSignout + " signed out.\n");
                     }
                     if(commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")){
                         String expediteur = commandeUtilisateur.substring(13);
                         String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ")+4,commandeUtilisateur.indexOf(" CONTENT "));
+                        String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ")+8);
+                        sauvegarderLigne(expediteur + " > " + destinataire + " : " + msg + '\n');
                         if(expediteur.equals(nomUtilisateur))
                             expediteur = "me";
                         if(destinataire.equals(nomUtilisateur))
                             expediteur = "me";
-                        String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ")+8);
-                        String ligne = expediteur+" > "+destinataire+" : " +msg+'\n';
-                        interfaceC.envoyerInfo(ligne);
-                        sauvegarderLigne(ligne);
+                        interfaceC.envoyerInfo(expediteur+" > "+destinataire+" : " +msg+'\n');
                     }
                 }
             }
@@ -118,7 +122,7 @@ public class EchoClient extends Thread {
                         userName.equals("SENDTO ")|| userName.equals(" CONTENT ") ||
                         userName.equals("QUIT")|| userName.equals("SIGNIN ") ||
                         userName.equals("SIGNOUT ")|| userName.equals("MESSAGE FROM ") ||
-                        userName.equals(" TO ")){//.................................................. ATTENTION, interdire doublons
+                        userName.equals(" TO ")){                             //.................................................. ATTENTION, interdire doublons
                     //error !!!!!!!!!
                 }else{
                     retour = "SIGNIN "+userName;
@@ -156,7 +160,7 @@ public class EchoClient extends Thread {
     private void sauvegarderLigne(String ligne){
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
-            writer.println(ligne);
+            writer.print(ligne);
             writer.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
