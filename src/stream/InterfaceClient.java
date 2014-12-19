@@ -133,7 +133,7 @@ public class InterfaceClient extends JFrame {
     private void buttonEnvoiCliked(){
         // Bouton envoye a été cliqué
         if(connecte){
-            leClient.envoyerServeur(message.getText(),nomUtilisateur);
+            leClient.envoyerServeur(message.getText());
             message.setText("");
         }else{
             JOptionPane.showMessageDialog(this,

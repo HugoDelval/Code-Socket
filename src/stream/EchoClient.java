@@ -18,6 +18,7 @@ public class EchoClient extends Thread {
     private BufferedReader socIn = null;
     private InterfaceClient interfaceC;
     private String nomUtilisateur="";
+    private boolean connected=false;
 
     EchoClient(String adresseIP, String port, InterfaceClient interC){
         try {
@@ -42,11 +43,19 @@ public class EchoClient extends Thread {
     public void run() {
         try {
             while (true) {
-                // Récupération de ce que le serveur envoi
-                String info = socIn.readLine();
+                // Récupération du nom d'utilisateur qui envoi l'info
+                String user = socIn.readLine();
                 // Renvoie de la meme chose
-                if(interfaceC != null && !info.isEmpty())
-                    interfaceC.envoyerInfo(info+'\n');
+                if(interfaceC != null && !user.isEmpty()){
+                    // Récupération de la commande de l'utilisateur
+                    String commandeUtilisateur = socIn.readLine();
+                    // traiter commande utilisateur
+                    if(interfaceC != null && !commandeUtilisateur.isEmpty()){
+                        //traite .............................................................................
+                        interfaceC.envoyerInfo(commandeUtilisateur+'\n');
+                    }
+                }
+
             }
         }catch (Exception e) {
             System.err.println("Error in ClientThread:" + e);
@@ -65,16 +74,16 @@ public class EchoClient extends Thread {
     }
 
     public void envoyerServeur(String commande){
-
         if(!commande.isEmpty()){
             String retour="";
             String userName="";
             if(commande.contains("CONNECT ")){
                 userName = commande.substring(8);
-                if(userName.equals("all")){
+                if(userName.equals("all")){//...................................................................... ATTENTION, interdire doublons
                     //error !!!!!!!!!
                 }else{
                     retour = "SIGNIN "+userName;
+                    nomUtilisateur = userName;
                 }
             }
             if(connected && commande.contains("SENDTO ") && commande.contains(" CONTENT ")){
@@ -86,11 +95,8 @@ public class EchoClient extends Thread {
                 retour = "SIGNOUT "+nomUtilisateur;
             }
             socOut.println(retour);
+            socOut.println(nomUtilisateur);
         }
-
-
-        socOut.println(nomUtilisateur);
-        socOut.println(commande);
     }
 }
 

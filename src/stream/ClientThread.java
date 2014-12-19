@@ -53,31 +53,11 @@ public class ClientThread extends Thread {
         }
 	}
 
-	public void envoyerInfo(String commande){
-		envoyerInfo(commande,"");
-	}
-
-	public void envoyerInfo(String commande, String user)
+	public void envoyerInfo(String commande,String user)
 	{
 		if(!commande.isEmpty()){
-			String retour="";
-			if(commande.contains("CONNECT ")){
-				String username = commande.substring(8);
-				if(username.equals("all")){
-					//error !!!!!!!!!
-				}else{
-					retour = "SIGNIN "+username;
-				}
-			}
-			if(commande.contains("SENDTO ") && commande.contains(" CONTENT ")){
-				String destinataire = commande.substring(7,commande.indexOf(" CONTENT "));
-				String message = commande.substring(commande.indexOf(" CONTENT ")+8);
-				retour = "MESSAGE FROM " + user + " TO " +destinataire +" CONTENT " + message;
-			}
-			if(commande.equals("QUIT")){
-				retour = "SIGNOUT "+user;
-			}
-			socOut.println(retour);
+			socOut.println(user);
+			socOut.println(commande);
 		}
 	}
 

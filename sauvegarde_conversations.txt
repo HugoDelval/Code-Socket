@@ -1,12 +1,2 @@
-127.0.0.1
-zdkfjbsn,
-skdjfb
-CONNECT hugo
-SENDTO moi CONTENT salut
-SENDTO moi CONTENT salut
-SENDTO moi CONTENT salut
-SENDTO mosdfi CONTENT salut
-SENDTO moi CONTENT salut
-SENDTOuser CONTENT msg
-SENDTO user CONTENT msg
-QUIT
+SIGNIN username
+username
