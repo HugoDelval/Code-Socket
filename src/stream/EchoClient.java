@@ -17,6 +17,7 @@ public class EchoClient extends Thread {
     private PrintStream socOut = null;
     private BufferedReader socIn = null;
     private InterfaceClient interfaceC;
+    private String nomUtilisateur="";
 
     EchoClient(String adresseIP, String port, InterfaceClient interC){
         try {
@@ -63,8 +64,33 @@ public class EchoClient extends Thread {
         }
     }
 
-    public void envoyerServeur(String info){
-        socOut.println(info);
+    public void envoyerServeur(String commande){
+
+        if(!commande.isEmpty()){
+            String retour="";
+            String userName="";
+            if(commande.contains("CONNECT ")){
+                userName = commande.substring(8);
+                if(userName.equals("all")){
+                    //error !!!!!!!!!
+                }else{
+                    retour = "SIGNIN "+userName;
+                }
+            }
+            if(connected && commande.contains("SENDTO ") && commande.contains(" CONTENT ")){
+                String destinataire = commande.substring(7,commande.indexOf(" CONTENT "));
+                String message = commande.substring(commande.indexOf(" CONTENT ")+8);
+                retour = "MESSAGE FROM " + nomUtilisateur + " TO " +destinataire +" CONTENT " + message;
+            }
+            if(connected && commande.equals("QUIT")){
+                retour = "SIGNOUT "+nomUtilisateur;
+            }
+            socOut.println(retour);
+        }
+
+
+        socOut.println(nomUtilisateur);
+        socOut.println(commande);
     }
 }
 

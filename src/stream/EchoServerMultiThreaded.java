@@ -37,7 +37,7 @@ public class EchoServerMultiThreaded  extends Thread{
 
 	}
 
-	public void envoyerInfo(String commande){
+	public void envoyerInfo(String commande,String user){
 		try {
 			writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
 		} catch (FileNotFoundException e) {
@@ -52,7 +52,7 @@ public class EchoServerMultiThreaded  extends Thread{
 		Iterator iterator = mesClients.iterator();
 		while(iterator.hasNext()){
 			c = (ClientThread)iterator.next();
-			c.envoyerInfo(commande);
+			c.envoyerInfo(commande,user);
 		}
 		writer.close();
 	}

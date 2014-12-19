@@ -38,11 +38,14 @@ public class ClientThread extends Thread {
 	public void run() {
 		try {
     		while (true) {
-				// Récupération de la commande du client
-				String line = socIn.readLine();
+				// Récupération du nom du client
+				String user = socIn.readLine();
 				// Renvoie de la meme chose
-				if(parent != null && !line.isEmpty()){
-					parent.envoyerInfo(line);
+				if(parent != null && !user.isEmpty()){
+					String commande = socIn.readLine();
+					// Renvoie de la meme chose
+					if(parent != null && !commande.isEmpty())
+						parent.envoyerInfo(commande,user);
 				}
     		}
     	}catch (Exception e) {
@@ -50,19 +53,31 @@ public class ClientThread extends Thread {
         }
 	}
 
-	public void envoyerInfo(String commande)
+	public void envoyerInfo(String commande){
+		envoyerInfo(commande,"");
+	}
+
+	public void envoyerInfo(String commande, String user)
 	{
 		if(!commande.isEmpty()){
-			if(commande.contains("CONNECT")){
-
+			String retour="";
+			if(commande.contains("CONNECT ")){
+				String username = commande.substring(8);
+				if(username.equals("all")){
+					//error !!!!!!!!!
+				}else{
+					retour = "SIGNIN "+username;
+				}
 			}
-			if(commande.contains("SENDTO") && commande.contains("CONTENT")){
-
+			if(commande.contains("SENDTO ") && commande.contains(" CONTENT ")){
+				String destinataire = commande.substring(7,commande.indexOf(" CONTENT "));
+				String message = commande.substring(commande.indexOf(" CONTENT ")+8);
+				retour = "MESSAGE FROM " + user + " TO " +destinataire +" CONTENT " + message;
 			}
 			if(commande.equals("QUIT")){
-
+				retour = "SIGNOUT "+user;
 			}
-				socOut.println(commande);
+			socOut.println(retour);
 		}
 	}
 
