@@ -70,7 +70,11 @@ public class EchoServerMultiThreaded  extends Thread{
 				mesClients.add(ct);
 				ct.start();
 			}
-		}catch (Exception e) {
+		}
+		catch (SocketException e) {
+			System.out.println("Le serveur est bien déconnecté : " + e);
+		}
+		catch (Exception e) {
 			System.err.println("Erreur lors de l'execution du serveur : " + e);
 		}
 	}
