@@ -128,17 +128,26 @@ public class InterfaceServeur extends JFrame {
         }
         else
         {
-            // Changer le texte du boutton et connecter le serveur
-            button.setText("Déconnecter le serveur");
-            connecte = true;
-
+            // Vérifier que le port entré n'est pas vide
             String port = portServeur.getText();
-            System.out.println("Numero de port : " + port);
-            monServeur = new EchoServerMultiThreaded(port);
-            monServeur.start();
+            // Changer le texte du boutton et connecter le serveur
+            if (!port.isEmpty())
+            {
+                button.setText("Déconnecter le serveur");
+                connecte = true;
 
-            //Rendre inaccessible les champs
-            portServeur.setEnabled(false);
+                System.out.println("Numero de port : " + port);
+                monServeur = new EchoServerMultiThreaded(port);
+                monServeur.start();
+
+                //Rendre inaccessible les champs
+                portServeur.setEnabled(false);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this,
+                        "Aucun port renseigné !");
+            }
         }
     }
 }
