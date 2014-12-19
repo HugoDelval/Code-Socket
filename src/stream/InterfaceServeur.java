@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.BindException;
 import javax.swing.border.Border;
 
 public class InterfaceServeur extends JFrame {
@@ -133,15 +134,25 @@ public class InterfaceServeur extends JFrame {
             // Changer le texte du boutton et connecter le serveur
             if (!port.isEmpty())
             {
-                button.setText("Déconnecter le serveur");
-                connecte = true;
 
-                System.out.println("Numero de port : " + port);
                 monServeur = new EchoServerMultiThreaded(port);
-                monServeur.start();
+                if (monServeur.erreurPort != null)
+                {
+                    JOptionPane.showMessageDialog(this,
+                            "Le port auquel vous tentez d'accéder est déjà occupé. \n" +
+                                    "Veuillez en utiliser un autre !");
+                }
+                else
+                {
+                    button.setText("Déconnecter le serveur");
+                    connecte = true;
 
-                //Rendre inaccessible les champs
-                portServeur.setEnabled(false);
+                    System.out.println("Numero de port : " + port);
+                    monServeur.start();
+
+                    //Rendre inaccessible les champs
+                    portServeur.setEnabled(false);
+                }
             }
             else
             {
