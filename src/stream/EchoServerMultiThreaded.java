@@ -17,15 +17,20 @@ public class EchoServerMultiThreaded  extends Thread{
 	private ServerSocket listenSocket;
 	private LinkedList<ClientThread> mesClients;
 	private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
+	public BindException erreurPort;
  	/**
   	* main method
 	* @param port, String
   	* 
   	**/
 	EchoServerMultiThreaded(String port){
+		erreurPort = null;
 		try {
 			// Création d'un Socket pour écouter les demandes de connexion sur le serveur
 			listenSocket = new ServerSocket(Integer.parseInt(port)); //port
+		} catch (BindException e) {
+			// Traitement de l'erreur dans l'interface serveur
+			erreurPort = e;
 		} catch (IOException e) {
 			System.err.println("Erreur de construction de EchoServerMultiThreaded :" + e);
 		}
