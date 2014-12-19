@@ -75,7 +75,7 @@ public class InterfaceClient extends JFrame {
         {
             public void actionPerformed(ActionEvent e)
             {
-                buttonCliked();
+                buttonConnectCliked();
             }
         });
         buttonEnvoi.addActionListener(new ActionListener()
@@ -106,7 +106,7 @@ public class InterfaceClient extends JFrame {
         setVisible(true);
     }
 
-    private void buttonCliked(){
+    private void buttonConnectCliked(){
         // Bouton Connecter/Deconnecter a été cliqué
         if(connecte){
             button.setText("Connexion");

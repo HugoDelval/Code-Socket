@@ -23,7 +23,7 @@ public class EchoServerMultiThreaded  {
 	private PrintWriter writer;
  	/**
   	* main method
-	* @param String port
+	* @param port, String
   	* 
   	**/
 	EchoServerMultiThreaded(String port){
@@ -79,7 +79,7 @@ public class EchoServerMultiThreaded  {
 		try {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
 			Iterator iterator = fichierHistorique.iterator();
-			String line="";
+			String line;
 			while (iterator.hasNext()) {
 				line = (String)iterator.next();
 				ct.envoyerInfo(line);

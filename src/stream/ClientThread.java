@@ -50,8 +50,6 @@ public class ClientThread extends Thread {
 						parent.envoyerInfo(line);
 					}
 				}
-
-
     		}
     	}catch (Exception e) {
         	System.err.println("Error in ClientThread:" + e);
