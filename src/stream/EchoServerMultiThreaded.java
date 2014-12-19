@@ -73,7 +73,8 @@ public class EchoServerMultiThreaded  extends Thread{
 			}
 		}
 		catch (SocketException e) {
-			System.out.println("Le serveur est bien déconnecté : " + e);
+			// Pas besoin d'envoyer quelque chose, on se déconnecte correctement
+			//System.out.println("Le serveur est bien déconnecté : " + e);
 		}
 		catch (Exception e) {
 			System.err.println("Erreur lors de l'execution du serveur : " + e);

@@ -43,7 +43,7 @@ public class EchoClient extends Thread {
     public void run() {
         try {
             while (true) {
-                // Récupération du nom d'utilisateur qui envoi l'info
+                // Récupération du nom d'utilisateur qui envoie l'info
                 String user = socIn.readLine();
                 // Renvoie de la meme chose
                 if(interfaceC != null && !user.isEmpty()){
@@ -52,6 +52,13 @@ public class EchoClient extends Thread {
                     // traiter commande utilisateur
                     if(interfaceC != null && !commandeUtilisateur.isEmpty()){
                         //traite .............................................................................
+                        // Traiter ce qui est reçu par ClientThread (commandeUtilisateur)
+                        if (commandeUtilisateur.contains("SIGNIN "))
+                        {
+                            String userName = commandeUtilisateur.substring(7);
+                            System.out.println("Nom de l'utilisateur : " + userName);
+                        }
+
                         interfaceC.envoyerInfo(commandeUtilisateur+'\n');
                     }
                 }
@@ -69,7 +76,7 @@ public class EchoClient extends Thread {
             socIn.close();
             echoSocket.close();
         } catch (IOException e) {
-            System.out.println("Erreur deconnexion client : "+e);
+            System.out.println("Erreur deconnexion client : " + e);
         }
     }
 
