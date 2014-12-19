@@ -9,18 +9,21 @@ package stream;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+
 
 public class EchoServerMultiThreaded  {
 
 	private ServerSocket listenSocket;
-	private ClientThread[] mesClients;
-	private int numClient;
-	private boolean plein;
-	private final String NOM_FICHIER="sauvegarde_conversations.txt";
+	private LinkedList<ClientThread> mesClients;
+	private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
 	private PrintWriter writer;
  	/**
   	* main method
-	* @param EchoServer port
+	* @param String port
   	* 
   	**/
 	EchoServerMultiThreaded(String port){
@@ -30,30 +33,28 @@ public class EchoServerMultiThreaded  {
 		} catch (IOException e) {
 			System.err.println("Erreur de construction de EchoServerMultiThreaded :" + e);
 		}
-		mesClients=new ClientThread[100];
-		numClient=-1;
-		plein=false;
+		mesClients=new LinkedList<ClientThread>();
+
+	}
+
+	public void envoyerInfo(String info, String adresseIP){
 		try {
-			writer = new PrintWriter(NOM_FICHIER, "UTF-8");
+			writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+		} catch (Exception e){
+			e.printStackTrace();
 		}
-	}
-
-	public void envoyerInfo(String info){
-		writer.println(info);
-		if(plein){
-			for(int i=0; i<mesClients.length ; i++){
-				mesClients[i].envoyerInfo(info);
-			}
-		}else{
-			for(int i=0; i<=this.numClient ; i++){
-				mesClients[i].envoyerInfo(info);
-			}
+		writer.println(adresseIP+'\n'+info);
+		ClientThread c;
+		Iterator iterator = mesClients.iterator();
+		while(iterator.hasNext()){
+			c = (ClientThread)iterator.next();
+			c.envoyerInfo(adresseIP+" a ecrit :"+'\n'+info);
 		}
-
+		writer.close();
 	}
 
 	public void lancerServeur(){
@@ -65,25 +66,32 @@ public class EchoServerMultiThreaded  {
 				System.out.println("Connexion from: " + clientSocket.getInetAddress());
 				// Création d'un thread par client (communication unique pour chaque client)
 				ClientThread ct = new ClientThread(clientSocket,this);
-				// on kicke des clients si il y en a trop et on incremente le compteur
-				if(numClient==99){
-					numClient=0;
-					plein = true;
-					mesClients[0].deconnecter();
-				}else{
-					numClient++;
-					if(plein){
-						mesClients[numClient].deconnecter();
-					}
-				}
-				// penser a notifier le client !
-				mesClients[numClient]=ct;
+				envoyerHistorique(ct);
+				mesClients.add(ct);
 				ct.start();
-				ct
 			}
 		}catch (Exception e) {
 			System.err.println("Erreur lors de l'execution du serveur :" + e);
 		}
+	}
+
+	private void envoyerHistorique(ClientThread ct) {
+		try {
+			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
+			Iterator iterator = fichierHistorique.iterator();
+			String line="";
+			while (iterator.hasNext()) {
+				line = (String)iterator.next();
+				ct.envoyerInfo(line+" a ecrit :");
+				line = (String)iterator.next();
+				ct.envoyerInfo(line);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

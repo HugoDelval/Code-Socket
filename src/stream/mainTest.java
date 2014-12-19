@@ -8,7 +8,7 @@ public class mainTest {
 
     public static  void main (String[] args) {
 
-      InterfaceServeur monInterfaceServeur = new InterfaceServeur();
+      InterfaceClient monInterfaceServeur = new InterfaceClient();
 
     }
 }

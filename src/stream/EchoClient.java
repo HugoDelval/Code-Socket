@@ -11,14 +11,14 @@ import java.net.*;
 
 
 
-public class EchoClient {
+public class EchoClient extends Thread {
 
     private Socket echoSocket = null;
     private PrintStream socOut = null;
-    private BufferedReader stdIn = null;
     private BufferedReader socIn = null;
+    private InterfaceClient interfaceC;
 
-    EchoClient(String adresseIP, String port){
+    EchoClient(String adresseIP, String port, InterfaceClient interC){
         try {
             // Création d'une connexion entre le client et le serveur : précision d'une adresse et d'un port
             echoSocket = new Socket(adresseIP,new Integer(port).intValue());
@@ -26,8 +26,8 @@ public class EchoClient {
             socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             // Création d'un buffer qui va stocker ce qu'on veut envoyer au serveur
             socOut= new PrintStream(echoSocket.getOutputStream());
-            // Création d'un buffer qui va stocker ce qu'on tape dans la console
-            stdIn = new BufferedReader(new InputStreamReader(System.in));
+            // interface de la classe :
+            interfaceC=interC;
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + adresseIP);
             System.exit(1);
@@ -38,29 +38,34 @@ public class EchoClient {
         }
     }
 
-    public void lancerClient() throws IOException {
-        String line;
-        while (true) {
-            // On lit ce que rentre l'utilisateur
-        	line=stdIn.readLine();
-        	if (line.equals(".")) break;
-            // On envoie au serveur
-        	socOut.println(line);
-            // On lit ce qu'on reçoie du serveur
-        	System.out.println("echo: " + socIn.readLine());
+    public void run() {
+        try {
+            while (true) {
+                // Récupération de ce que le serveur envoi
+                String info = socIn.readLine();
+                // Renvoie de la meme chose
+                if(interfaceC != null && !info.isEmpty())
+                    interfaceC.envoyerInfo(info+'\n');
+            }
+        }catch (Exception e) {
+            System.err.println("Error in ClientThread:" + e);
         }
-        deconnecter();
     }
+
 
     public void deconnecter(){
         socOut.close();
         try {
             socIn.close();
-            stdIn.close();
             echoSocket.close();
         } catch (IOException e) {
             System.out.println("Erreur deconnexion client : "+e);
         }
+    }
+
+    public void envoyerServeur(String info){
+        // On envoie au serveur
+        socOut.println(info);
     }
 }
 

@@ -41,7 +41,8 @@ public class ClientThread extends Thread {
 				// Récupération de ce que le client a écrit
 				String line = socIn.readLine();
 				// Renvoie de la meme chose
-				parent.envoyerInfo(line);
+				if(parent != null && !line.isEmpty())
+					parent.envoyerInfo(line,clientSocket.getInetAddress().toString());
     		}
     	}catch (Exception e) {
         	System.err.println("Error in ClientThread:" + e);
@@ -50,7 +51,8 @@ public class ClientThread extends Thread {
 
 	public void envoyerInfo(String info)
 	{
-		socOut.println(info);
+		if(!info.isEmpty())
+			socOut.println(info);
 	}
 
 	public void deconnecter(){

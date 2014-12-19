@@ -10,17 +10,17 @@ public class ChatClient {
 
     ChatClient(String adresseIP, String port)
     {
-        monClient=new EchoClient(adresseIP,port);
+        //monClient=new EchoClient(adresseIP,port);
     }
 
     public void lancer(){
-        try {
+        /*try {
             monClient.lancerClient();
         } catch (IOException e) {
             System.out.println("Erreur client.");
             e.printStackTrace();
             System.exit(1);
-        }
+        }*/
     }
 
     public static void main(String[] args){
