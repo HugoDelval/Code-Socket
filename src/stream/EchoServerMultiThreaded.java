@@ -37,7 +37,7 @@ public class EchoServerMultiThreaded  extends Thread{
 
 	}
 
-	public void envoyerInfo(String commande,String user){
+	public void envoyerInfo(String commande){
 		try {
 			writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
 		} catch (FileNotFoundException e) {
@@ -47,13 +47,12 @@ public class EchoServerMultiThreaded  extends Thread{
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		writer.println(user);
 		writer.println(commande);
 		ClientThread c;
 		Iterator iterator = mesClients.iterator();
 		while(iterator.hasNext()){
 			c = (ClientThread)iterator.next();
-			c.envoyerInfo(commande,user);
+			c.envoyerInfo(commande);
 		}
 		writer.close();
 	}
@@ -112,12 +111,10 @@ public class EchoServerMultiThreaded  extends Thread{
 		try {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
 			Iterator iterator = fichierHistorique.iterator();
-			String user;
 			String cmd;
 			while (iterator.hasNext()) {
-				user = (String)iterator.next();
 				cmd = (String)iterator.next();
-				ct.envoyerInfo(cmd,user);
+				ct.envoyerInfo(cmd);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

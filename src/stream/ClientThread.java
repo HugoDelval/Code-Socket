@@ -38,25 +38,19 @@ public class ClientThread extends Thread {
 	public void run() {
 		try {
     		while (true) {
-				// Récupération du nom du client
-				String user = socIn.readLine();
+				String commande = socIn.readLine();
 				// Renvoie de la meme chose
-				if(parent != null && !user.isEmpty()){
-					String commande = socIn.readLine();
-					// Renvoie de la meme chose
-					if(parent != null && !commande.isEmpty())
-						parent.envoyerInfo(commande,user);
-				}
+				if(parent != null && !commande.isEmpty())
+					parent.envoyerInfo(commande);
     		}
     	}catch (Exception e) {
         	System.err.println("Error in ClientThread:" + e);
         }
 	}
 
-	public void envoyerInfo(String commande,String user)
+	public void envoyerInfo(String commande)
 	{
 		if(!commande.isEmpty()){
-			socOut.println(user);
 			socOut.println(commande);
 		}
 	}

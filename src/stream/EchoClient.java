@@ -51,15 +51,33 @@ public class EchoClient extends Thread {
                     String commandeUtilisateur = socIn.readLine();
                     // traiter commande utilisateur
                     if(interfaceC != null && !commandeUtilisateur.isEmpty()){
-                        //traite .............................................................................
                         // Traiter ce qui est reçu par ClientThread (commandeUtilisateur)
-                        if (commandeUtilisateur.contains("SIGNIN "))
-                        {
-                            String userName = commandeUtilisateur.substring(7);
-                            System.out.println("Nom de l'utilisateur : " + userName);
+                        if (commandeUtilisateur.contains("SIGNIN ")) {
+                            String userSigning = commandeUtilisateur.substring(7);
+                            if(userSigning.equals(nomUtilisateur)){
+                                connected=true;
+                            }
+                            socOut.println("server > all : " +userSigning+ " signed in.");
                         }
-
-                        interfaceC.envoyerInfo(commandeUtilisateur+'\n');
+                    }
+                    if(connected){
+                        if (commandeUtilisateur.contains("SIGNOUT ")) {
+                            String userSignout = commandeUtilisateur.substring(8);
+                            if(userSignout.equals(nomUtilisateur)){
+                                connected=false;
+                            }
+                            socOut.println("server > all : " +userSignout+ " signed out.");
+                        }
+                        if(commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")){
+                            String expediteur = commandeUtilisateur.substring(13);
+                            String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ")+4,commandeUtilisateur.indexOf(" CONTENT "));
+                            if(expediteur.equals(nomUtilisateur))
+                                expediteur = "me";
+                            if(destinataire.equals(nomUtilisateur))
+                                expediteur = "me";
+                            String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ")+8);
+                            socOut.println(expediteur+" > "+destinataire+" : " +msg);
+                        }
                     }
                 }
 
@@ -86,7 +104,11 @@ public class EchoClient extends Thread {
             String userName="";
             if(commande.contains("CONNECT ")){
                 userName = commande.substring(8);
-                if(userName.equals("all")){//...................................................................... ATTENTION, interdire doublons
+                if(userName.equals("all") || userName.equals("CONNECT ") ||
+                        userName.equals("SENDTO ")|| userName.equals(" CONTENT ") ||
+                        userName.equals("QUIT")|| userName.equals("SIGNIN ") ||
+                        userName.equals("SIGNOUT ")|| userName.equals("MESSAGE FROM ") ||
+                        userName.equals(" TO ")){//.................................................. ATTENTION, interdire doublons
                     //error !!!!!!!!!
                 }else{
                     retour = "SIGNIN "+userName;
@@ -102,7 +124,6 @@ public class EchoClient extends Thread {
                 retour = "SIGNOUT "+nomUtilisateur;
             }
             socOut.println(retour);
-            socOut.println(nomUtilisateur);
         }
     }
 }
