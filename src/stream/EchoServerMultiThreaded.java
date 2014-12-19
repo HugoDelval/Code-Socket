@@ -71,7 +71,34 @@ public class EchoServerMultiThreaded  {
 				ct.start();
 			}
 		}catch (Exception e) {
-			System.err.println("Erreur lors de l'execution du serveur :" + e);
+			System.err.println("Erreur lors de l'execution du serveur : " + e);
+		}
+	}
+
+	public void decoServeur()
+	{
+		System.out.println("Server disconnected...");
+		try {
+			//Déconnecter tous les clients d'abord
+			ClientThread c;
+			Iterator iterator = mesClients.iterator();
+			while(iterator.hasNext()){
+				c = (ClientThread)iterator.next();
+				c.deconnecter();
+			}
+			// On efface la liste de clients
+			mesClients.clear();
+
+			//Eteindre le serveur (on "arrête" la boucle infinie)
+			try {
+				listenSocket.close();
+			} catch (IOException e) {
+				System.out.println("Erreur deconnexion serveur : "+e);
+			}
+
+		} catch (Exception e)
+		{
+			System.err.println("Erreur lors de la déconnexion du serveur : " + e);
 		}
 	}
 
