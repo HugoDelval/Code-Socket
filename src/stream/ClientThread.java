@@ -38,17 +38,11 @@ public class ClientThread extends Thread {
 	public void run() {
 		try {
     		while (true) {
-				// Récupération du nom du client
+				// Récupération de la commande du client
 				String line = socIn.readLine();
 				// Renvoie de la meme chose
 				if(parent != null && !line.isEmpty()){
-					parent.envoyerInfo(line+" a ecrit :");
-					// Récupération de ce que le client a écrit
-					line = socIn.readLine();
-					// Renvoie de la meme chose
-					if(parent != null && !line.isEmpty()){
-						parent.envoyerInfo(line);
-					}
+					parent.envoyerInfo(line);
 				}
     		}
     	}catch (Exception e) {
@@ -56,10 +50,20 @@ public class ClientThread extends Thread {
         }
 	}
 
-	public void envoyerInfo(String info)
+	public void envoyerInfo(String commande)
 	{
-		if(!info.isEmpty())
-			socOut.println(info);
+		if(!commande.isEmpty()){
+			if(commande.contains("CONNECT")){
+
+			}
+			if(commande.contains("SENDTO") && commande.contains("CONTENT")){
+
+			}
+			if(commande.equals("QUIT")){
+
+			}
+				socOut.println(commande);
+		}
 	}
 
 	public void deconnecter(){
