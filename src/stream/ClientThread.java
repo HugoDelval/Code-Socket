@@ -38,11 +38,20 @@ public class ClientThread extends Thread {
 	public void run() {
 		try {
     		while (true) {
-				// Récupération de ce que le client a écrit
+				// Récupération du nom du client
 				String line = socIn.readLine();
 				// Renvoie de la meme chose
-				if(parent != null && !line.isEmpty())
-					parent.envoyerInfo(line,clientSocket.getInetAddress().toString());
+				if(parent != null && !line.isEmpty()){
+					parent.envoyerInfo(line+" a ecrit :");
+					// Récupération de ce que le client a écrit
+					line = socIn.readLine();
+					// Renvoie de la meme chose
+					if(parent != null && !line.isEmpty()){
+						parent.envoyerInfo(line);
+					}
+				}
+
+
     		}
     	}catch (Exception e) {
         	System.err.println("Error in ClientThread:" + e);

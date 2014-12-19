@@ -23,6 +23,9 @@ public class InterfaceClient extends JFrame {
     private JLabel labelAdresse = new JLabel("Adresse IP Serveur :          ");
     private JTextField portServeur = new JTextField("9547",27);
     private JLabel labelPort = new JLabel("Port d'écoute du Serveur :");
+    private JTextField votreNom = new JTextField("",27);
+    private JLabel labelVotreNom = new JLabel("Votre Nom :                           ");
+    private JLabel labelMessage = new JLabel("Votre Message :");
     private JButton buttonEnvoi = new JButton("Envoyer");
 
 
@@ -39,7 +42,7 @@ public class InterfaceClient extends JFrame {
         // Ajouter un titre à la fenêtre
         setTitle("Client");
         // Dimensionner la fenêtre
-        setSize(500, 480);
+        setSize(500, 530);
         setResizable(false);
         //Positionner au centre la fenêtre
         setLocationRelativeTo(null);
@@ -52,6 +55,8 @@ public class InterfaceClient extends JFrame {
         panelPrincipal.add(addresseServeur);
         panelPrincipal.add(labelPort);
         panelPrincipal.add(portServeur);
+        panelPrincipal.add(labelVotreNom);
+        panelPrincipal.add(votreNom);
         panelPrincipal.add(button);
 
         historiqueMessages.setEditable(false);
@@ -60,6 +65,7 @@ public class InterfaceClient extends JFrame {
         DefaultCaret caret = (DefaultCaret)historiqueMessages.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
+        panelPrincipal.add(labelMessage);
         panelPrincipal.add(message);
         panelPrincipal.add(buttonEnvoi);
 
@@ -106,15 +112,21 @@ public class InterfaceClient extends JFrame {
             button.setText("Connexion");
             leClient.deconnecter();
             connecte=false;
+            addresseServeur.setEnabled(true);
+            votreNom.setEnabled(true);
+            portServeur.setEnabled(true);
         }else {
             String ip = addresseServeur.getText();
             String port = portServeur.getText();
             if(!ip.isEmpty() && !port.isEmpty()){
                 historiqueMessages.setText("");
-                leClient=new EchoClient(ip,port,this);
+                leClient=new EchoClient(ip,port,this,votreNom.getText());
                 leClient.start();
-                connecte=true;
+                connecte = true;
                 button.setText("Deconnexion");
+                addresseServeur.setEnabled(false);
+                votreNom.setEnabled(false);
+                portServeur.setEnabled(false);
             }else{
                 JOptionPane.showMessageDialog(this,
                         "Les champs IP Serveur et Port Serveur doivent être remplis.",

@@ -37,7 +37,7 @@ public class EchoServerMultiThreaded  {
 
 	}
 
-	public void envoyerInfo(String info, String adresseIP){
+	public void envoyerInfo(String info){
 		try {
 			writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
 		} catch (FileNotFoundException e) {
@@ -47,12 +47,12 @@ public class EchoServerMultiThreaded  {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		writer.println(adresseIP+'\n'+info);
+		writer.println(info);
 		ClientThread c;
 		Iterator iterator = mesClients.iterator();
 		while(iterator.hasNext()){
 			c = (ClientThread)iterator.next();
-			c.envoyerInfo(adresseIP+" a ecrit :"+'\n'+info);
+			c.envoyerInfo(info);
 		}
 		writer.close();
 	}
@@ -81,8 +81,6 @@ public class EchoServerMultiThreaded  {
 			Iterator iterator = fichierHistorique.iterator();
 			String line="";
 			while (iterator.hasNext()) {
-				line = (String)iterator.next();
-				ct.envoyerInfo(line+" a ecrit :");
 				line = (String)iterator.next();
 				ct.envoyerInfo(line);
 			}

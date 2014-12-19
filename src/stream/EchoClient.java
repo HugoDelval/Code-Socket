@@ -17,8 +17,9 @@ public class EchoClient extends Thread {
     private PrintStream socOut = null;
     private BufferedReader socIn = null;
     private InterfaceClient interfaceC;
+    private String nomUtilisateur;
 
-    EchoClient(String adresseIP, String port, InterfaceClient interC){
+    EchoClient(String adresseIP, String port, InterfaceClient interC, String nomU){
         try {
             // Création d'une connexion entre le client et le serveur : précision d'une adresse et d'un port
             echoSocket = new Socket(adresseIP,new Integer(port).intValue());
@@ -28,6 +29,11 @@ public class EchoClient extends Thread {
             socOut= new PrintStream(echoSocket.getOutputStream());
             // interface de la classe :
             interfaceC=interC;
+            if(nomU.isEmpty()){
+                nomUtilisateur=adresseIP;
+            }else{
+                nomUtilisateur=nomU;
+            }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host:" + adresseIP);
             System.exit(1);
@@ -64,7 +70,7 @@ public class EchoClient extends Thread {
     }
 
     public void envoyerServeur(String info){
-        // On envoie au serveur
+        socOut.println(nomUtilisateur);
         socOut.println(info);
     }
 }
