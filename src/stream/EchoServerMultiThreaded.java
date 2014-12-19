@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
-public class EchoServerMultiThreaded  {
+public class EchoServerMultiThreaded  extends Thread{
 
 	private ServerSocket listenSocket;
 	private LinkedList<ClientThread> mesClients;
@@ -57,7 +57,7 @@ public class EchoServerMultiThreaded  {
 		writer.close();
 	}
 
-	public void lancerServeur(){
+	public void run() {
 		System.out.println("Server ready...");
 		try {
 			// Ecoute infinie pour savoir si un client se connecte au serveur

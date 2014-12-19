@@ -4,6 +4,8 @@ package stream;
  * Created by Ophélie on 12/12/2014.
  */
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -116,14 +118,27 @@ public class InterfaceServeur extends JFrame {
     {
         if (connecte)
         {
+            //Changer le texte du boutton et déconnecter le serveur
             button.setText("Lancer le serveur");
             connecte = false;
-            monServeur.
+            monServeur.decoServeur();
+
+            //Rendre accessible les champs
+            portServeur.setEnabled(true);
         }
         else
         {
+            // Changer le texte du boutton et connecter le serveur
             button.setText("Déconnecter le serveur");
             connecte = true;
+
+            String port = portServeur.getText();
+            System.out.println("Numero de port : " + port);
+            monServeur = new EchoServerMultiThreaded(port);
+            monServeur.start();
+
+            //Rendre inaccessible les champs
+            portServeur.setEnabled(false);
         }
     }
 }

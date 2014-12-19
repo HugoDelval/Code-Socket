@@ -12,7 +12,7 @@ public class ChatServeur {
     }
 
     public void lancer(){
-        monServeur.lancerServeur();
+        monServeur.start();
     }
 
     public static void main(String[] args){
