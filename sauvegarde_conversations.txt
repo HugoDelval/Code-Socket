@@ -1,8 +1,25 @@
-server > all : username signed in.
-server > all : hugo signed in.
-server > all : hugo signed in.
-server > all : username signed in.
-server > all : hugo2 signed in.
-server > all : hugo2 signed in.
-server > all : kjdb signed in.
-server > all : kjdb signed out.
+SIGNIN hugo
+SIGNIN truc
+SIGNOUT truc
+SIGNIN machin
+SIGNOUT hugo
+SIGNOUT machin
+SIGNIN hugo
+SIGNIN hugo
+SIGNOUT hugo
+SIGNIN hugo
+SIGNOUT hugo
+SIGNIN hugo
+SIGNIN hugo
+SIGNIN truc
+SIGNIN truc
+SIGNOUT truc
+SIGNOUT hugo
+SIGNIN hugo
+SIGNIN truc
+MESSAGE FROM truc TO hugo CONTENT  msg
+SIGNOUT truc
+SIGNIN machin
+SIGNIN truc
+SIGNOUT truc
+SIGNOUT machin

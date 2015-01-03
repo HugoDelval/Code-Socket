@@ -8,11 +8,6 @@ package stream;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class EchoClient extends Thread {
@@ -23,7 +18,7 @@ public class EchoClient extends Thread {
     private InterfaceClient interfaceC;
     private String nomUtilisateur="";
     private boolean connected=false;
-    private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
+    private boolean historiqueEnCours = false;
 
     EchoClient(String adresseIP, String port, InterfaceClient interC){
         try {
@@ -48,50 +43,50 @@ public class EchoClient extends Thread {
     public void run() {
         try {
             while (true) {
-                // Récupération de la commande de l'utilisateur
+                // Récupération de la commande de l'utilisateur envoye par le serveur
                 String commandeUtilisateur = socIn.readLine();
                 // traiter commande utilisateur
                 if(interfaceC != null && !commandeUtilisateur.isEmpty()){
                     // Traiter ce qui est reçu par ClientThread (commandeUtilisateur)
                     if (commandeUtilisateur.contains("SIGNIN ")) {
                         String userSigning = commandeUtilisateur.substring(7);
-                        if(userSigning.equals(nomUtilisateur)){
+                        if(userSigning.equals(nomUtilisateur) && !connected && !historiqueEnCours){
+                            interfaceC.envoyerInfo("------- Debut de votre session -------\r\n");
                             connected=true;
-                            envoyerHistorique();
+                            socOut.println("ilveutlhistoriquealorsenvoielui");
+                            historiqueEnCours=true;
                         }
                         if(connected) {
-                            //interfaceC.envoyerInfo(ligne);
-                            interfaceC.envoyerInfo("------- Debut de votre connection -------");
-                            sauvegarderLigne( "server > all : " + userSigning + " signed in.\n");
                             if(userSigning.equals(nomUtilisateur)){
                                 userSigning = "You've";
                             }
-                            interfaceC.envoyerInfo( "server > all : " + userSigning + " signed in.\n");
+                            interfaceC.envoyerInfo( "server > all : " + userSigning + " signed in.\r\n");
                         }
                     }
-                }
-                if(connected){
-                    if (commandeUtilisateur.contains("SIGNOUT ")) {
-                        String userSignout = commandeUtilisateur.substring(8);
-                        if(userSignout.equals(nomUtilisateur)){
-                            connected=false;
+                    if(connected) {
+                        if (commandeUtilisateur.contains("SIGNOUT ")) {
+                            String userSignout = commandeUtilisateur.substring(8);
+                            if (userSignout.equals(nomUtilisateur) && !historiqueEnCours) {
+                                interfaceC.envoyerInfo("--------- Fin de votre session -------\r\n");
+                                connected = false;
+                            }
+                            if (userSignout.equals(nomUtilisateur)) {
+                                userSignout = "You've";
+                            }
+                            interfaceC.envoyerInfo("server > all : " + userSignout + " signed out.\r\n");
                         }
-                        sauvegarderLigne( "server > all : " + userSignout + " signed out.\n");
-                        if(userSignout.equals(nomUtilisateur)){
-                            userSignout = "You've";
+                        if (commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")) {
+                            String expediteur = commandeUtilisateur.substring(commandeUtilisateur.indexOf("MESSAGE FROM ") + 13, commandeUtilisateur.indexOf(" TO "));
+                            String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ") + 4, commandeUtilisateur.indexOf(" CONTENT "));
+                            String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ") + 8);
+                            if (expediteur.equals(nomUtilisateur))
+                                expediteur = "You";
+                            if (destinataire.equals(nomUtilisateur))
+                                destinataire = "You";
+                            interfaceC.envoyerInfo(expediteur + " > " + destinataire + " : " + msg + '\r' + '\n');
                         }
-                        interfaceC.envoyerInfo( "server > all : " + userSignout + " signed out.\n");
-                    }
-                    if(commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")){
-                        String expediteur = commandeUtilisateur.substring(13);
-                        String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ")+4,commandeUtilisateur.indexOf(" CONTENT "));
-                        String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ")+8);
-                        sauvegarderLigne(expediteur + " > " + destinataire + " : " + msg + '\n');
-                        if(expediteur.equals(nomUtilisateur))
-                            expediteur = "me";
-                        if(destinataire.equals(nomUtilisateur))
-                            expediteur = "me";
-                        interfaceC.envoyerInfo(expediteur+" > "+destinataire+" : " +msg+'\n');
+                        if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler"))
+                            historiqueEnCours = false;
                     }
                 }
             }
@@ -102,9 +97,9 @@ public class EchoClient extends Thread {
 
 
     public void deconnecter(){
-        socOut.close();
         try {
             envoyerServeur("QUIT");
+            socOut.close();
             socIn.close();
             echoSocket.close();
         } catch (IOException e) {
@@ -116,7 +111,7 @@ public class EchoClient extends Thread {
         if(!commande.isEmpty()){
             String retour="";
             String userName="";
-            if(commande.contains("CONNECT ")){
+            if(commande.contains("CONNECT ") && !connected){
                 userName = commande.substring(8);
                 if(userName.equals("all") || userName.equals("CONNECT ") ||
                         userName.equals("SENDTO ")|| userName.equals(" CONTENT ") ||
@@ -138,36 +133,6 @@ public class EchoClient extends Thread {
                 retour = "SIGNOUT "+nomUtilisateur;
             }
             socOut.println(retour);
-        }
-    }
-
-    private void envoyerHistorique() {
-        try {
-            List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
-            Iterator iterator = fichierHistorique.iterator();
-            String cmd;
-            while (iterator.hasNext()) {
-                cmd = (String)iterator.next();
-                interfaceC.envoyerInfo(cmd + '\n');
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sauvegarderLigne(String ligne){
-        try {
-            PrintWriter writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
-            writer.print(ligne);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
         }
     }
 

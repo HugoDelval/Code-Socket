@@ -16,7 +16,6 @@ public class EchoServerMultiThreaded  extends Thread{
 
 	private ServerSocket listenSocket;
 	private LinkedList<ClientThread> mesClients;
-	private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
 	public BindException erreurPort;
  	/**
   	* main method
