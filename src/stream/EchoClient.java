@@ -6,6 +6,7 @@
  */
 package stream;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
@@ -20,24 +21,15 @@ public class EchoClient extends Thread {
     private boolean connected=false;
     private boolean historiqueEnCours = false;
 
-    EchoClient(String adresseIP, String port, InterfaceClient interC){
-        try {
-            // Création d'une connexion entre le client et le serveur : précision d'une adresse et d'un port
-            echoSocket = new Socket(adresseIP,new Integer(port).intValue());
-            // Création d'un buffer qui va stocker ce qu'on recoie du serveur
-            socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            // Création d'un buffer qui va stocker ce qu'on veut envoyer au serveur
-            socOut= new PrintStream(echoSocket.getOutputStream());
-            // interface de la classe :
-            interfaceC=interC;
-        } catch (UnknownHostException e) {
-            System.err.println("Don't know about host:" + adresseIP);
-            System.exit(1);
-        } catch (IOException e) {
-            System.err.println("Couldn't get I/O for "
-                    + "the connection to: "+ adresseIP);
-            System.exit(1);
-        }
+    EchoClient(String adresseIP, String port, InterfaceClient interC) throws IOException {
+        // Création d'une connexion entre le client et le serveur : précision d'une adresse et d'un port
+        echoSocket = new Socket(adresseIP,new Integer(port).intValue());
+        // Création d'un buffer qui va stocker ce qu'on recoie du serveur
+        socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+        // Création d'un buffer qui va stocker ce qu'on veut envoyer au serveur
+        socOut= new PrintStream(echoSocket.getOutputStream());
+        // interface de la classe :
+        interfaceC=interC;
     }
 
     public void run() {
@@ -62,20 +54,20 @@ public class EchoClient extends Thread {
                             }
                             interfaceC.envoyerInfo( "server > all : " + userSigning + " signed in.\r\n");
                         }
-                    }
-                    if(connected) {
+                    }else if(commandeUtilisateur.contains("nomimpossibleaattribuerparcequilestdejapris")) {
+                        JOptionPane.showMessageDialog(interfaceC,"Vous ne pouvez pas choisir cet username, il est déjà pris.");
+                    }else if(connected) {
                         if (commandeUtilisateur.contains("SIGNOUT ")) {
                             String userSignout = commandeUtilisateur.substring(8);
-                            if (userSignout.equals(nomUtilisateur) && !historiqueEnCours) {
-                                interfaceC.envoyerInfo("--------- Fin de votre session -------\r\n");
-                                connected = false;
-                            }
                             if (userSignout.equals(nomUtilisateur)) {
                                 userSignout = "You've";
                             }
                             interfaceC.envoyerInfo("server > all : " + userSignout + " signed out.\r\n");
-                        }
-                        if (commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")) {
+                            if (userSignout.equals(nomUtilisateur) && !historiqueEnCours) {
+                                interfaceC.envoyerInfo("--------- Fin de votre session -------\r\n");
+                                connected = false;
+                            }
+                        }else if (commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")) {
                             String expediteur = commandeUtilisateur.substring(commandeUtilisateur.indexOf("MESSAGE FROM ") + 13, commandeUtilisateur.indexOf(" TO "));
                             String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ") + 4, commandeUtilisateur.indexOf(" CONTENT "));
                             String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ") + 8);
@@ -84,14 +76,13 @@ public class EchoClient extends Thread {
                             if (destinataire.equals(nomUtilisateur))
                                 destinataire = "You";
                             interfaceC.envoyerInfo(expediteur + " > " + destinataire + " : " + msg + '\r' + '\n');
-                        }
-                        if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler"))
+                        }else if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler"))
                             historiqueEnCours = false;
                     }
                 }
             }
         }catch (Exception e) {
-            System.err.println("Error in ClientThread:" + e);
+            JOptionPane.showMessageDialog(interfaceC,"Déconnecté.");
         }
     }
 
@@ -103,7 +94,7 @@ public class EchoClient extends Thread {
             socIn.close();
             echoSocket.close();
         } catch (IOException e) {
-            System.out.println("Erreur deconnexion client : " + e);
+            JOptionPane.showMessageDialog(interfaceC,"Erreur deconnexion : " + e);
         }
     }
 
@@ -118,7 +109,7 @@ public class EchoClient extends Thread {
                         userName.equals("QUIT")|| userName.equals("SIGNIN ") ||
                         userName.equals("SIGNOUT ")|| userName.equals("MESSAGE FROM ") ||
                         userName.equals(" TO ")){                             //.................................................. ATTENTION, interdire doublons
-                    //error !!!!!!!!!
+                    JOptionPane.showMessageDialog(interfaceC,"Vous ne pouvez pas choisir cet username, il contient des mot interdits.");
                 }else{
                     retour = "SIGNIN "+userName;
                     nomUtilisateur = userName;

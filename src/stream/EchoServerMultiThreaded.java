@@ -95,6 +95,16 @@ public class EchoServerMultiThreaded  extends Thread{
 		}
 	}
 
+	public boolean register(String nomDesire) {
+		boolean res=true;
+		ClientThread c;
+		Iterator iterator = mesClients.iterator();
+		while(iterator.hasNext() && res){
+			c = (ClientThread)iterator.next();
+			res = !((c.getNomClient()).equals(nomDesire));
+		}
+		return res;
+	}
 }
 
   

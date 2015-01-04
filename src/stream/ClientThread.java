@@ -24,6 +24,7 @@ public class ClientThread extends Thread {
 	// Flux de sortie du point de vue Client
 	PrintStream socOut = null;
 	private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
+	private String nomClient="";
 
 	ClientThread(Socket s, EchoServerMultiThreaded p) {
 		try {
@@ -34,7 +35,6 @@ public class ClientThread extends Thread {
 		} catch (IOException e) {
 			System.out.println("Erreur construction client du cote serveur : "+e);
 		}
-
 	}
 
  	/**
@@ -48,11 +48,20 @@ public class ClientThread extends Thread {
 				// Renvoie de la meme chose
 				if(commande.contains("ilveutlhistoriquealorsenvoielui")){
 					envoyerHistorique();
+				}else if (commande.contains("SIGNIN ")) {
+					String nomDesire = commande.substring(7);
+					if(!nomDesire.isEmpty() && parent.register(nomDesire)){
+						nomClient=nomDesire;
+						parent.envoyerInfo(commande);
+						sauvegarderLigne(commande);
+					}else{
+						envoyerInfo("nomimpossibleaattribuerparcequilestdejapris");
+					}
 				}else if(parent != null && !commande.isEmpty()) {
 					parent.envoyerInfo(commande);
 					sauvegarderLigne(commande);
 				}
-    		}
+			}
     	}catch (Exception e) {
         	System.err.println("Error in ClientThread:" + e);
         }
@@ -108,6 +117,10 @@ public class ClientThread extends Thread {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	public String getNomClient(){
+		return nomClient;
 	}
 
 }
