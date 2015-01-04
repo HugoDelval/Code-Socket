@@ -60,10 +60,11 @@ public class EchoClient extends Thread {
                     }else if(connected) {
                         if (commandeUtilisateur.contains("SIGNOUT ")) {
                             String userSignout = commandeUtilisateur.substring(8);
+                            String user=userSignout;
                             if (userSignout.equals(nomUtilisateur)) {
-                                userSignout = "You've";
+                                user = "You've";
                             }
-                            interfaceC.envoyerInfo("server > all : " + userSignout + " signed out.\r\n");
+                            interfaceC.envoyerInfo("server > all : " + user + " signed out.\r\n");
                             if (userSignout.equals(nomUtilisateur) && !historiqueEnCours) {
                                 interfaceC.envoyerInfo("--------- Fin de votre session -------\r\n");
                                 connected = false;
@@ -79,6 +80,8 @@ public class EchoClient extends Thread {
                             interfaceC.envoyerInfo(expediteur + " > " + destinataire + " : " + msg + '\r' + '\n');
                         }else if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler")) {
                             historiqueEnCours = false;
+                        }else if (commandeUtilisateur.contains("cedestinatairenestpasconnudsl")) {
+                            JOptionPane.showMessageDialog(interfaceC,"Le destinataire que vous avez demandé pas n'existe ou plus.");
                         }
                     }
                 }
@@ -91,16 +94,17 @@ public class EchoClient extends Thread {
     }
 
 
-    public void deconnecter(){
+    public void deconnecter() {
+        if (connected) { // au chat
+            envoyerServeur("QUIT");
+            connected=false;
+        }
         try {
-            if(connected) { // au chat
-                envoyerServeur("QUIT");
-            }
             socOut.close();
             socIn.close();
             echoSocket.close();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(interfaceC,"Erreur deconnexion : " + e);
+            JOptionPane.showMessageDialog(interfaceC, "Erreur deconnexion : " + e);
         }
     }
 
