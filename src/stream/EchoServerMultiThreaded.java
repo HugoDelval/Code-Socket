@@ -16,7 +16,6 @@ public class EchoServerMultiThreaded  extends Thread{
 
 	private ServerSocket listenSocket;
 	private LinkedList<ClientThread> mesClients;
-	private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
 	public BindException erreurPort;
  	/**
   	* main method
@@ -96,6 +95,16 @@ public class EchoServerMultiThreaded  extends Thread{
 		}
 	}
 
+	public boolean register(String nomDesire) {
+		boolean res=true;
+		ClientThread c;
+		Iterator iterator = mesClients.iterator();
+		while(iterator.hasNext() && res){
+			c = (ClientThread)iterator.next();
+			res = !((c.getNomClient()).equals(nomDesire));
+		}
+		return res;
+	}
 }
 
   

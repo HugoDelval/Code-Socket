@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import javax.swing.text.DefaultCaret;
 
 public class InterfaceClient extends JFrame {
@@ -18,15 +19,18 @@ public class InterfaceClient extends JFrame {
     private JTextField message = new JTextField("",41);
     private JTextArea historiqueMessages = new JTextArea(18, 40);
     JScrollPane scrollHistorique = new JScrollPane(historiqueMessages);
-    private JButton button = new JButton("Connexion");
+    private JButton buttonConnect = new JButton("Connexion Serveur");
     private JTextField addresseServeur = new JTextField("127.0.0.1",27);
     private JLabel labelAdresse = new JLabel("Adresse IP Serveur :          ");
     private JTextField portServeur = new JTextField("9547",27);
     private JLabel labelPort = new JLabel("Port d'écoute du Serveur :");
-    private JLabel labelMessage = new JLabel("Votre Message :");
+    private JLabel labelMessage = new JLabel("Votre Commande :");
     private JButton buttonEnvoi = new JButton("Envoyer");
+    private JButton buttonCmdConnect = new JButton("cmd CONNECT");
+    private JButton buttonCmdSend = new JButton("cmd SEND");
+    private JButton buttonCmdDisconnect = new JButton("cmd DISCONNECT");
 
-
+    //avec le server
     private boolean connecte=false;
     private EchoClient leClient;
 
@@ -53,7 +57,7 @@ public class InterfaceClient extends JFrame {
         panelPrincipal.add(addresseServeur);
         panelPrincipal.add(labelPort);
         panelPrincipal.add(portServeur);
-        panelPrincipal.add(button);
+        panelPrincipal.add(buttonConnect);
 
         historiqueMessages.setEditable(false);
         scrollHistorique.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -63,15 +67,37 @@ public class InterfaceClient extends JFrame {
 
         panelPrincipal.add(labelMessage);
         panelPrincipal.add(message);
+        panelPrincipal.add(buttonCmdConnect);
+        panelPrincipal.add(buttonCmdSend);
+        panelPrincipal.add(buttonCmdDisconnect);
         panelPrincipal.add(buttonEnvoi);
 
 
         /* events */
-        button.addActionListener(new ActionListener()
+        buttonConnect.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                buttonConnectCliked();
+            }
+        });
+        buttonCmdConnect.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
             {
-                buttonConnectCliked();
+                buttonCmdConnectCliked();
+            }
+        });
+        buttonCmdSend.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                buttonCmdSendCliked();
+            }
+        });
+        buttonCmdDisconnect.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                buttonCmdDisconnectCliked();
             }
         });
         buttonEnvoi.addActionListener(new ActionListener()
@@ -98,29 +124,45 @@ public class InterfaceClient extends JFrame {
 
 
         setContentPane(panelPrincipal);
-
+        premiereEtape();
         setVisible(true);
+    }
+
+    private void buttonCmdSendCliked() {
+        message.setText("SENDTO [all | username] CONTENT message");
+        message.requestFocus();
+    }
+
+    private void buttonCmdConnectCliked() {
+        message.setText("CONNECT username");
+        message.requestFocus();
+    }
+
+    private void buttonCmdDisconnectCliked() {
+        message.setText("QUIT");
+        message.requestFocus();
     }
 
     private void buttonConnectCliked(){
         // Bouton Connecter/Deconnecter a été cliqué
         if(connecte){
-            button.setText("Connexion");
             leClient.deconnecter();
-            connecte=false;
-            addresseServeur.setEnabled(true);
-            portServeur.setEnabled(true);
+            premiereEtape();
         }else {
             String ip = addresseServeur.getText();
             String port = portServeur.getText();
             if(!ip.isEmpty() && !port.isEmpty()){
-                historiqueMessages.setText("");
-                leClient=new EchoClient(ip,port,this);
-                leClient.start();
-                connecte = true;
-                button.setText("Deconnexion");
-                addresseServeur.setEnabled(false);
-                portServeur.setEnabled(false);
+                try {
+                    leClient=new EchoClient(ip,port,this);
+                    leClient.start();
+                    historiqueMessages.setText("");
+                    secondeEtape();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this,
+                            "Impossible de se connecter au Serveur demandé.",
+                            "Inane error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }else{
                 JOptionPane.showMessageDialog(this,
                         "Les champs IP Serveur et Port Serveur doivent être remplis.",
@@ -128,6 +170,30 @@ public class InterfaceClient extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    public void premiereEtape() {
+        connecte=false;
+        buttonConnect.setText("Connexion Serveur");
+        addresseServeur.setEnabled(true);
+        portServeur.setEnabled(true);
+        buttonCmdDisconnect.setEnabled(false);
+        buttonEnvoi.setEnabled(false);
+        buttonCmdSend.setEnabled(false);
+        buttonCmdConnect.setEnabled(false);
+        message.setEnabled(false);
+    }
+
+    public void secondeEtape() {
+        connecte = true;
+        buttonConnect.setText("Deconnexion");
+        addresseServeur.setEnabled(false);
+        portServeur.setEnabled(false);
+        buttonCmdDisconnect.setEnabled(true);
+        buttonEnvoi.setEnabled(true);
+        buttonCmdSend.setEnabled(true);
+        buttonCmdConnect.setEnabled(true);
+        message.setEnabled(true);
     }
 
     private void buttonEnvoiCliked(){
