@@ -30,7 +30,7 @@ public class InterfaceClient extends JFrame {
     private JButton buttonCmdSend = new JButton("cmd SEND");
     private JButton buttonCmdDisconnect = new JButton("cmd DISCONNECT");
 
-
+    //avec le server
     private boolean connecte=false;
     private EchoClient leClient;
 
@@ -147,7 +147,6 @@ public class InterfaceClient extends JFrame {
         // Bouton Connecter/Deconnecter a été cliqué
         if(connecte){
             leClient.deconnecter();
-            connecte=false;
             premiereEtape();
         }else {
             String ip = addresseServeur.getText();
@@ -158,7 +157,6 @@ public class InterfaceClient extends JFrame {
                     leClient.start();
                     historiqueMessages.setText("");
                     secondeEtape();
-                    connecte = true;
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this,
                             "Impossible de se connecter au Serveur demandé.",
@@ -174,7 +172,8 @@ public class InterfaceClient extends JFrame {
         }
     }
 
-    private void premiereEtape() {
+    public void premiereEtape() {
+        connecte=false;
         buttonConnect.setText("Connexion Serveur");
         addresseServeur.setEnabled(true);
         portServeur.setEnabled(true);
@@ -185,7 +184,8 @@ public class InterfaceClient extends JFrame {
         message.setEnabled(false);
     }
 
-    private void secondeEtape() {
+    public void secondeEtape() {
+        connecte = true;
         buttonConnect.setText("Deconnexion");
         addresseServeur.setEnabled(false);
         portServeur.setEnabled(false);

@@ -90,13 +90,13 @@ public class ClientThread extends Thread {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
 			Iterator iterator = fichierHistorique.iterator();
 			String cmd;
-			envoyerInfo("MESSAGE FROM server TO You CONTENT ----------Début de l'historique-----------\r\n");
+			envoyerInfo("MESSAGE FROM server TO You CONTENT ----------Début de l'historique-----------");
 			while (iterator.hasNext()) {
 				cmd = (String)iterator.next();
 				if(iterator.hasNext())  // on envoie pas la derniere commande car redondant
 					envoyerInfo(cmd + '\r' + '\n');
 			}
-			envoyerInfo("MESSAGE FROM server TO You CONTENT -----------Fin de l'historique------------\r\n");
+			envoyerInfo("MESSAGE FROM server TO You CONTENT -----------Fin de l'historique------------");
 			envoyerInfo("cestlafindelhistoriquetupeuxarreterdesimuler");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

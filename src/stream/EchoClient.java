@@ -18,6 +18,7 @@ public class EchoClient extends Thread {
     private BufferedReader socIn = null;
     private InterfaceClient interfaceC;
     private String nomUtilisateur="";
+    //au chat
     private boolean connected=false;
     private boolean historiqueEnCours = false;
 
@@ -45,8 +46,8 @@ public class EchoClient extends Thread {
                         if(userSigning.equals(nomUtilisateur) && !connected && !historiqueEnCours){
                             interfaceC.envoyerInfo("------- Debut de votre session -------\r\n");
                             connected=true;
-                            socOut.println("ilveutlhistoriquealorsenvoielui");
                             historiqueEnCours=true;
+                            socOut.println("ilveutlhistoriquealorsenvoielui");
                         }
                         if(connected) {
                             if(userSigning.equals(nomUtilisateur)){
@@ -76,20 +77,25 @@ public class EchoClient extends Thread {
                             if (destinataire.equals(nomUtilisateur))
                                 destinataire = "You";
                             interfaceC.envoyerInfo(expediteur + " > " + destinataire + " : " + msg + '\r' + '\n');
-                        }else if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler"))
+                        }else if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler")) {
                             historiqueEnCours = false;
+                        }
                     }
                 }
             }
         }catch (Exception e) {
             JOptionPane.showMessageDialog(interfaceC,"Déconnecté.");
+            connected=false;
+            interfaceC.premiereEtape();
         }
     }
 
 
     public void deconnecter(){
         try {
-            envoyerServeur("QUIT");
+            if(connected) { // au chat
+                envoyerServeur("QUIT");
+            }
             socOut.close();
             socIn.close();
             echoSocket.close();
