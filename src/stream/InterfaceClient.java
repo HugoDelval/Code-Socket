@@ -175,6 +175,7 @@ public class InterfaceClient extends JFrame {
     public void premiereEtape() {
         connecte=false;
         buttonConnect.setText("Connexion Serveur");
+        historiqueMessages.setText(""); /////////////ok?
         addresseServeur.setEnabled(true);
         portServeur.setEnabled(true);
         buttonCmdDisconnect.setEnabled(false);

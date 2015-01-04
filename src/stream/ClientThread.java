@@ -50,12 +50,24 @@ public class ClientThread extends Thread {
 					envoyerHistorique();
 				}else if (commande.contains("SIGNIN ")) {
 					String nomDesire = commande.substring(7);
-					if(!nomDesire.isEmpty() && parent.register(nomDesire)){
+					if(!nomDesire.isEmpty() && parent.estAbsent(nomDesire)){
 						nomClient=nomDesire;
 						parent.envoyerInfo(commande);
 						sauvegarderLigne(commande);
 					}else{
 						envoyerInfo("nomimpossibleaattribuerparcequilestdejapris");
+					}
+				}else if(commande.contains("SIGNOUT ")) {
+					parent.envoyerInfo(commande);
+					sauvegarderLigne(commande);
+					nomClient="";
+				}else if((commande.contains("MESSAGE FROM ") && commande.contains(" TO ") && commande.contains(" CONTENT "))) {
+					String destinataire = commande.substring(commande.indexOf(" TO ") + 4, commande.indexOf(" CONTENT "));
+					if(!destinataire.equals("all") && parent.estAbsent(destinataire)){
+						envoyerInfo("cedestinatairenestpasconnudsl");
+					}else{
+						parent.envoyerInfo(commande);
+						sauvegarderLigne(commande);
 					}
 				}else if(parent != null && !commande.isEmpty()) {
 					parent.envoyerInfo(commande);
@@ -80,6 +92,7 @@ public class ClientThread extends Thread {
 			socOut.close();
 			socIn.close();
 			clientSocket.close();
+			parent.remove(this);
 		} catch (IOException e) {
 			System.out.println("erreur de fermeture de client cote serveur : " + e);
 		}
@@ -94,7 +107,7 @@ public class ClientThread extends Thread {
 			while (iterator.hasNext()) {
 				cmd = (String)iterator.next();
 				if(iterator.hasNext())  // on envoie pas la derniere commande car redondant
-					envoyerInfo(cmd + '\r' + '\n');
+					envoyerInfo(cmd);
 			}
 			envoyerInfo("MESSAGE FROM server TO You CONTENT -----------Fin de l'historique------------");
 			envoyerInfo("cestlafindelhistoriquetupeuxarreterdesimuler");

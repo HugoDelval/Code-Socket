@@ -1,20 +1,11 @@
 SIGNIN username
-SIGNOUT username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
+SIGNIN truc
+MESSAGE FROM truc TO all CONTENT  message
+MESSAGE FROM truc TO truc CONTENT  message
+SIGNOUT truc
 SIGNOUT username
 SIGNIN username
 SIGNOUT username
-SIGNOUT username
 SIGNIN username
-SIGNOUT username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNOUT username
-SIGNIN username
+MESSAGE FROM username TO all CONTENT  message
 SIGNOUT username

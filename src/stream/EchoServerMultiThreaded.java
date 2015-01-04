@@ -95,7 +95,7 @@ public class EchoServerMultiThreaded  extends Thread{
 		}
 	}
 
-	public boolean register(String nomDesire) {
+	public boolean estAbsent(String nomDesire) {
 		boolean res=true;
 		ClientThread c;
 		Iterator iterator = mesClients.iterator();
@@ -104,6 +104,10 @@ public class EchoServerMultiThreaded  extends Thread{
 			res = !((c.getNomClient()).equals(nomDesire));
 		}
 		return res;
+	}
+
+	public void remove(ClientThread ct) {
+		mesClients.remove(ct);
 	}
 }
 
