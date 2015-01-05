@@ -9,7 +9,8 @@ package stream;
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
-
+import java.util.LinkedList;
+import java.util.Iterator;
 
 public class EchoClient extends Thread {
 
@@ -21,6 +22,7 @@ public class EchoClient extends Thread {
     //au chat
     private boolean connected=false;
     private boolean historiqueEnCours = false;
+    private LinkedList<String> utilisateursCo;
 
     EchoClient(String adresseIP, String port, InterfaceClient interC) throws IOException {
         // Création d'une connexion entre le client et le serveur : précision d'une adresse et d'un port
@@ -31,6 +33,7 @@ public class EchoClient extends Thread {
         socOut= new PrintStream(echoSocket.getOutputStream());
         // interface de la classe :
         interfaceC=interC;
+        utilisateursCo = new LinkedList<String>();
     }
 
     public void run() {
@@ -55,6 +58,10 @@ public class EchoClient extends Thread {
                             }
                             interfaceC.envoyerInfo( "server > all : " + userSigning + " signed in.\r\n");
                         }
+                        if(connected && !historiqueEnCours){
+                            // Un utilisateur vient de se connecter ! Ajout dans la liste
+                            utilisateursCo.add(userSigning);
+                        }
                     }else if(commandeUtilisateur.contains("nomimpossibleaattribuerparcequilestdejapris")) {
                         JOptionPane.showMessageDialog(interfaceC,"Vous ne pouvez pas choisir cet username, il est déjà pris.");
                     }else if(connected) {
@@ -68,6 +75,10 @@ public class EchoClient extends Thread {
                             if (userSignout.equals(nomUtilisateur) && !historiqueEnCours) {
                                 interfaceC.envoyerInfo("--------- Fin de votre session -------\r\n");
                                 connected = false;
+                            }
+                            if(connected && !historiqueEnCours){
+                                // Un utilisateur vient de se deconnecter ! Suppression dans la liste
+                                utilisateursCo.remove(userSignout);
                             }
                         }else if (commandeUtilisateur.contains("MESSAGE FROM ") && commandeUtilisateur.contains(" TO ") && commandeUtilisateur.contains(" CONTENT ")) {
                             String expediteur = commandeUtilisateur.substring(commandeUtilisateur.indexOf("MESSAGE FROM ") + 13, commandeUtilisateur.indexOf(" TO "));
@@ -84,6 +95,13 @@ public class EchoClient extends Thread {
                             JOptionPane.showMessageDialog(interfaceC,"Le destinataire que vous avez demandé pas n'existe ou plus.");
                         }
                     }
+                }
+                // Affichage de la liste des utilisateurs connectes en permanence
+                String nomUtilisateurAff = "";
+                Iterator iterator = utilisateursCo.iterator();
+                while (iterator.hasNext()) {
+                    nomUtilisateurAff = (String)iterator.next() + "\r\n";
+                    interfaceC.envoyerClientsCo(nomUtilisateurAff);
                 }
             }
         }catch (Exception e) {

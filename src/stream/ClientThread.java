@@ -53,6 +53,7 @@ public class ClientThread extends Thread {
 					if(!nomDesire.isEmpty() && parent.estAbsent(nomDesire)){
 						nomClient=nomDesire;
 						parent.envoyerInfo(commande);
+						parent.envoyerListeClients(this);
 						sauvegarderLigne(commande);
 					}else{
 						envoyerInfo("nomimpossibleaattribuerparcequilestdejapris");
@@ -76,6 +77,7 @@ public class ClientThread extends Thread {
 			}
     	}catch (Exception e) {
         	System.err.println("Error in ClientThread:" + e);
+			//
         }
 	}
 

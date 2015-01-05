@@ -9,3 +9,23 @@ SIGNOUT username
 SIGNIN username
 MESSAGE FROM username TO all CONTENT  message
 SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNOUT username
+SIGNIN username
+SIGNIN usernamex
+SIGNOUT usernamex
+SIGNOUT username
