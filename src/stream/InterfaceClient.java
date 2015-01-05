@@ -15,6 +15,13 @@ import javax.swing.text.DefaultCaret;
 
 public class InterfaceClient extends JFrame {
 
+    // Gerer la liste des personnes connectees
+    private JTextArea utilisateursCo = new JTextArea(18, 10);
+    JScrollPane scrollUtilisateursCo = new JScrollPane(utilisateursCo);
+
+    // CrÃ©er JPanel qui va contenir la liste et l'historique de messages
+    private JPanel histoPlusUtilisateurs = new JPanel();
+
     private JPanel panelPrincipal = new JPanel();
     private JTextField message = new JTextField("",41);
     private JTextArea historiqueMessages = new JTextArea(18, 40);
@@ -61,9 +68,14 @@ public class InterfaceClient extends JFrame {
 
         historiqueMessages.setEditable(false);
         scrollHistorique.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        panelPrincipal.add(scrollHistorique,BorderLayout.CENTER);
+        //panelPrincipal.add(scrollHistorique,BorderLayout.CENTER);
         DefaultCaret caret = (DefaultCaret)historiqueMessages.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        // Ajout du panel qui va contenir histo + utilisateurs
+        histoPlusUtilisateurs.add(scrollUtilisateursCo, BorderLayout.WEST);
+        histoPlusUtilisateurs.add(scrollHistorique, BorderLayout.EAST);
+        panelPrincipal.add(histoPlusUtilisateurs);
 
         panelPrincipal.add(labelMessage);
         panelPrincipal.add(message);
@@ -175,7 +187,8 @@ public class InterfaceClient extends JFrame {
     public void premiereEtape() {
         connecte=false;
         buttonConnect.setText("Connexion Serveur");
-        historiqueMessages.setText(""); /////////////ok?
+        historiqueMessages.setText("");
+        utilisateursCo.setText("");
         addresseServeur.setEnabled(true);
         portServeur.setEnabled(true);
         buttonCmdDisconnect.setEnabled(false);
@@ -210,5 +223,9 @@ public class InterfaceClient extends JFrame {
 
     public void envoyerInfo(String info){
         historiqueMessages.setText(historiqueMessages.getText()+info);
+    }
+
+    public void envoyerClientsCo (String info) {
+        utilisateursCo.setText(utilisateursCo.getText() + info);
     }
 }
