@@ -42,7 +42,8 @@ public class EchoServerMultiThreaded  extends Thread{
 		Iterator iterator = mesClients.iterator();
 		while(iterator.hasNext()){
 			c = (ClientThread)iterator.next();
-			c.envoyerInfo(commande);
+			if(!c.getNomClient().isEmpty()) // si le client a un nom = si il est connecte
+				c.envoyerInfo(commande);
 		}
 	}
 

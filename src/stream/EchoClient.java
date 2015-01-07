@@ -97,12 +97,7 @@ public class EchoClient extends Thread {
                     }
                 }
                 // Affichage de la liste des utilisateurs connectes en permanence
-                String nomUtilisateurAff = "";
-                Iterator iterator = utilisateursCo.iterator();
-                while (iterator.hasNext()) {
-                    nomUtilisateurAff = (String)iterator.next() + "\r\n";
-                    interfaceC.envoyerClientsCo(nomUtilisateurAff);
-                }
+                interfaceC.envoyerClientsCo((String [])utilisateursCo.toArray());
             }
         }catch (Exception e) {
             JOptionPane.showMessageDialog(interfaceC,"Déconnecté.");

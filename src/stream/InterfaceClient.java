@@ -6,17 +6,14 @@ package stream;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import javax.swing.text.DefaultCaret;
 
 public class InterfaceClient extends JFrame {
 
     // Gerer la liste des personnes connectees
-    private JTextArea utilisateursCo = new JTextArea(18, 10);
+    private JList<String> utilisateursCo = new JList<String>();
     JScrollPane scrollUtilisateursCo = new JScrollPane(utilisateursCo);
 
     // CrÃ©er JPanel qui va contenir la liste et l'historique de messages
@@ -24,7 +21,7 @@ public class InterfaceClient extends JFrame {
 
     private JPanel panelPrincipal = new JPanel();
     private JTextField message = new JTextField("",41);
-    private JTextArea historiqueMessages = new JTextArea(18, 40);
+    private JTextArea historiqueMessages = new JTextArea(18, 30);
     JScrollPane scrollHistorique = new JScrollPane(historiqueMessages);
     private JButton buttonConnect = new JButton("Connexion Serveur");
     private JTextField addresseServeur = new JTextField("127.0.0.1",27);
@@ -71,6 +68,10 @@ public class InterfaceClient extends JFrame {
         //panelPrincipal.add(scrollHistorique,BorderLayout.CENTER);
         DefaultCaret caret = (DefaultCaret)historiqueMessages.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        utilisateursCo.setFixedCellWidth(115);
+        utilisateursCo.setVisibleRowCount(16);
+        utilisateursCo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Ajout du panel qui va contenir histo + utilisateurs
         histoPlusUtilisateurs.add(scrollUtilisateursCo, BorderLayout.WEST);
@@ -133,6 +134,16 @@ public class InterfaceClient extends JFrame {
                     leClient.deconnecter();
             }
         });
+        utilisateursCo.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if( (evt.getClickCount() == 2 || evt.getClickCount() == 3) && list.isEnabled() ) {
+                    String user = (String)list.getSelectedValue();
+                    message.setText("SENDTO "+user+" CONTENT message");
+
+                }
+            }
+        });
 
 
         setContentPane(panelPrincipal);
@@ -188,7 +199,8 @@ public class InterfaceClient extends JFrame {
         connecte=false;
         buttonConnect.setText("Connexion Serveur");
         historiqueMessages.setText("");
-        utilisateursCo.setText("");
+        utilisateursCo.setListData(new String[0]);
+        utilisateursCo.setEnabled(false);
         addresseServeur.setEnabled(true);
         portServeur.setEnabled(true);
         buttonCmdDisconnect.setEnabled(false);
@@ -201,6 +213,7 @@ public class InterfaceClient extends JFrame {
     public void secondeEtape() {
         connecte = true;
         buttonConnect.setText("Deconnexion");
+        utilisateursCo.setEnabled(true);
         addresseServeur.setEnabled(false);
         portServeur.setEnabled(false);
         buttonCmdDisconnect.setEnabled(true);
@@ -225,7 +238,7 @@ public class InterfaceClient extends JFrame {
         historiqueMessages.setText(historiqueMessages.getText()+info);
     }
 
-    public void envoyerClientsCo (String info) {
-        utilisateursCo.setText(utilisateursCo.getText() + info);
+    public void envoyerClientsCo (String[] info) {
+        utilisateursCo.setListData(info);
     }
 }
