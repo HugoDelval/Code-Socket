@@ -1,31 +1,38 @@
 SIGNIN username
-SIGNIN truc
-MESSAGE FROM truc TO all CONTENT  message
-MESSAGE FROM truc TO truc CONTENT  message
-SIGNOUT truc
+SIGNIN usernam
 SIGNOUT username
+SIGNOUT usernam
+SIGNIN username
+SIGNIN usernam
+SIGNOUT usernam
+SIGNOUT 
+SIGNOUT username
+SIGNOUT 
+SIGNIN username
+SIGNIN usernam
+SIGNOUT username
+SIGNOUT 
+SIGNOUT usernam
+SIGNOUT 
+SIGNIN username
+SIGNIN usernam
+MESSAGE FROM usernam TO usernam CONTENT  message
+MESSAGE FROM usernam TO username CONTENT  message
+SIGNOUT usernam
+SIGNOUT 
+SIGNOUT username
+SIGNOUT 
 SIGNIN username
 SIGNOUT username
-SIGNIN username
-MESSAGE FROM username TO all CONTENT  message
-SIGNOUT username
+SIGNOUT 
 SIGNIN username
 SIGNOUT username
+SIGNOUT 
 SIGNIN username
+SIGNIN usernam
+MESSAGE FROM usernam TO all CONTENT  message
+MESSAGE FROM username TO usernam CONTENT  message
+SIGNOUT usernam
+SIGNOUT 
 SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNIN username
-SIGNOUT username
-SIGNIN username
-SIGNIN usernamex
-SIGNOUT usernamex
-SIGNOUT username
+SIGNOUT 

@@ -48,6 +48,8 @@ public class ClientThread extends Thread {
 				// Renvoie de la meme chose
 				if(commande.contains("ilveutlhistoriquealorsenvoielui")){
 					envoyerHistorique();
+				}else if(commande.contains("onveutlalistedesutilisateursconnectestp")){
+					envoyerUtilisateurs();
 				}else if (commande.contains("SIGNIN ")) {
 					String nomDesire = commande.substring(7);
 					if(!nomDesire.isEmpty() && parent.estAbsent(nomDesire)){
@@ -83,6 +85,16 @@ public class ClientThread extends Thread {
         }
 	}
 
+	private void envoyerUtilisateurs() {
+		String fin ="cestbonjetaienvoyetouslesutilisateurs";
+		String[] users=parent.getUsersName();
+		for(int i=0 ; i< users.length ; i++){
+			if(!users[i].isEmpty())
+				envoyerInfo(users[i]);
+		}
+		envoyerInfo(fin);
+	}
+
 	public void envoyerInfo(String commande)
 	{
 		if(!commande.isEmpty()){
@@ -106,7 +118,7 @@ public class ClientThread extends Thread {
 		try {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
 			Iterator iterator = fichierHistorique.iterator();
-			String cmd;
+			String cmd="";
 			envoyerInfo("MESSAGE FROM server TO You CONTENT ----------Début de l'historique-----------");
 			while (iterator.hasNext()) {
 				cmd = (String)iterator.next();

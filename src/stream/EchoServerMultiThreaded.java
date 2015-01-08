@@ -49,11 +49,11 @@ public class EchoServerMultiThreaded  extends Thread{
 
 	public void run() {
 		try {
-			System.out.println("Server ready...");
+			//System.out.println("Server ready...");
 			// Ecoute infinie pour savoir si un client se connecte au serveur
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
-				System.out.println("Connexion from: " + clientSocket.getInetAddress());
+				//System.out.println("Connexion from: " + clientSocket.getInetAddress());
 				// Création d'un thread par client (communication unique pour chaque client)
 				ClientThread ct = new ClientThread(clientSocket,this);
 				mesClients.add(ct);
@@ -72,7 +72,7 @@ public class EchoServerMultiThreaded  extends Thread{
 	public void decoServeur()
 	{
 		try {
-			System.out.println("Server disconnected...");
+			//System.out.println("Server disconnected...");
 			//Déconnecter tous les clients d'abord
 			ClientThread c;
 			Iterator iterator = mesClients.iterator();
@@ -109,6 +109,19 @@ public class EchoServerMultiThreaded  extends Thread{
 
 	public void remove(ClientThread ct) {
 		mesClients.remove(ct);
+	}
+
+	public String[] getUsersName() {
+		String [] res = new String[mesClients.size()];
+		int i=0;
+		ClientThread c;
+		Iterator iterator = mesClients.iterator();
+		while(iterator.hasNext()){
+			c = (ClientThread)iterator.next();
+			res[i] = c.getNomClient();
+			i++;
+		}
+		return res;
 	}
 }
 

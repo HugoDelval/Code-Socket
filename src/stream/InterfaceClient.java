@@ -70,7 +70,7 @@ public class InterfaceClient extends JFrame {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         utilisateursCo.setFixedCellWidth(115);
-        utilisateursCo.setVisibleRowCount(16);
+        utilisateursCo.setVisibleRowCount(18);
         utilisateursCo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Ajout du panel qui va contenir histo + utilisateurs
@@ -240,5 +240,7 @@ public class InterfaceClient extends JFrame {
 
     public void envoyerClientsCo (String[] info) {
         utilisateursCo.setListData(info);
+
     }
+
 }
