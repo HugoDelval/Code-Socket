@@ -5,8 +5,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * EchoServerMultiThreaded
- * Exemple de serveur TCP multithread
+ * Exemple de serveur TCP multithread.
  *
  * @authors B3424
  * @see stream.ClientThread
@@ -14,17 +13,17 @@ import java.util.*;
 public class EchoServerMultiThreaded extends Thread {
 
 	/**
-	 * Crée une socket qui va permettre aux serveurs d'écouter et d'accepter les connexions clients.
+	 * Cree une socket qui va permettre aux serveurs d'ecouter et d'accepter les connexions clients.
 	 */
 	private ServerSocket listenSocket;
 
 	/**
-	 * Crée une liste de 'ClientThread' qui va stocker tous les clients connectés au serveur.
+	 * Cree une liste de 'ClientThread' qui va stocker tous les clients connectes au serveur.
 	 */
 	private LinkedList<ClientThread> mesClients;
 
 	/**
-	 * Crée un stockage pour une exception de type BindException
+	 * Cree un stockage pour une exception de type BindException
 	 */
 	public BindException erreurPort;
 
@@ -38,7 +37,7 @@ public class EchoServerMultiThreaded extends Thread {
 		erreurPort = null;
 		mesClients = new LinkedList<ClientThread>();
 		try {
-			// Création d'un Socket pour écouter les demandes de connexion sur le serveur
+			// Creation d'un Socket pour ecouter les demandes de connexion sur le serveur
 			listenSocket = new ServerSocket(Integer.parseInt(port));
 		} catch (BindException e) {
 			// Traitement de l'erreur <BindException> dans l'interface serveur
@@ -50,9 +49,9 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Méthode envoyerInfo :
-	 * Permet d'envoyer une information sous la forme d'une chaîne de caractères
-	 * à tous les clients connectés.
+	 * Methode envoyerInfo :
+	 * Permet d'envoyer une information sous la forme d'une chaine de caracteres
+	 * a tous les clients connectes.
 	 *
 	 * @param commande, String comportant la commande à envoyer.
 	 *
@@ -70,10 +69,10 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Méthode run :
-	 * Permet de démarrer un thread infini qui va attendre des demandes de connexions au serveur.
+	 * Methode run :
+	 * Permet de demarrer un thread infini qui va attendre des demandes de connexions au serveur.
 	 * A chaque fois qu'un client demande à se connecter, un nouveau canal de communication entre le serveur et le
-	 * client va être créé (communication unique pour chaque client = un thread par client).
+	 * client va être cree (communication unique pour chaque client = un thread par client).
 	 */
 	public void run() {
 		try {
@@ -82,15 +81,15 @@ public class EchoServerMultiThreaded extends Thread {
 			while (true) {
 				Socket clientSocket = listenSocket.accept();
 				//System.out.println("Connexion from: " + clientSocket.getInetAddress());
-				// Création d'un thread par client (communication unique pour chaque client)
+				// Creation d'un thread par client (communication unique pour chaque client)
 				ClientThread ct = new ClientThread(clientSocket,this);
 				mesClients.add(ct);
 				ct.start();
 			}
 		}
 		catch (SocketException e) {
-			// Pas besoin d'envoyer une erreur, on se déconnecte correctement
-			//System.out.println("Le serveur est bien déconnecté : " + e);
+			// Pas besoin d'envoyer une erreur, on se deconnecte correctement
+			//System.out.println("Le serveur est bien deconnecte : " + e);
 		}
 		catch (Exception e) {
 			// Traitement du reste des erreurs
@@ -99,15 +98,15 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Méthode decoServeur :
-	 * Permet de déconnecter proprement le serveur en déconnectant dans un premier temps tous les
+	 * Methode decoServeur :
+	 * Permet de deconnecter proprement le serveur en deconnectant dans un premier temps tous les
 	 * clients.
 	 */
 	public void decoServeur()
 	{
 		try {
 			//System.out.println("Server disconnected...");
-			//Déconnecter tous les clients d'abord
+			//Deconnecter tous les clients d'abord
 			ClientThread c;
 			Iterator iterator = mesClients.iterator();
 			while(iterator.hasNext()){
@@ -126,17 +125,17 @@ public class EchoServerMultiThreaded extends Thread {
 
 		} catch (Exception e) {
 			// Traitement du reste des erreurs
-			System.err.println("Erreur lors de la déconnexion du serveur : " + e);
+			System.err.println("Erreur lors de la deconnexion du serveur : " + e);
 		}
 	}
 
 	/**
-	 * Méthode estAbsent :
-	 * Permet de savoir si un client est présent dans la liste de clients connectés au serveur.
+	 * Methode estAbsent :
+	 * Permet de savoir si un client est present dans la liste de clients connectes au serveur.
 	 *
-	 * @param nomDesire, String représentant le nom du client.
-	 * @return Un booleen qui vaut 'true' si le client est absent de la liste des clients connectés
-	 * et qui vaut 'faux' s'il y est présent.
+	 * @param nomDesire, String representant le nom du client.
+	 * @return Un booleen qui vaut 'true' si le client est absent de la liste des clients connectes
+	 * et qui vaut 'faux' s'il y est present.
 	 */
 	public boolean estAbsent(String nomDesire) {
 		boolean res=true;
@@ -150,8 +149,8 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Méthode remove :
-	 * Permet de retirer un client de la liste des client connectés.
+	 * Methode remove :
+	 * Permet de retirer un client de la liste des client connectes.
 	 *
 	 * @param ct, ClientThread
 	 */
@@ -160,16 +159,16 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Méthode getUserName :
-	 * Permet d'envoyer les noms des clients connectés afin que le client puisse voir quelles personnes
-	 * sont connectées au chat.
+	 * Methode getUserName :
+	 * Permet d'envoyer les noms des clients connectes afin que le client puisse voir quelles personnes
+	 * sont connectees au chat.
 	 *
-	 * @return Un tableau de String qui stocke tous les noms des clients connectés.
+	 * @return Un tableau de String qui stocke tous les noms des clients connectes.
 	 * @see stream.ClientThread
 	 * @see stream.EchoClient
 	 */
 	public String[] getUsersName() {
-		// Création d'un tableau de la taille de la liste des clients connectés stockés dans un LinkedList
+		// Creation d'un tableau de la taille de la liste des clients connectes stockes dans un LinkedList
 		String [] res = new String[mesClients.size()];
 		int i=0;
 		ClientThread c;
