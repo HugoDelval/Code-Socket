@@ -82,6 +82,7 @@ public class ClientThread extends Thread {
 			parent.envoyerInfo("SIGNOUT "+nomClient);
 			sauvegarderLigne("SIGNOUT "+nomClient);
 			nomClient="";
+			parent.remove(this);
         }
 	}
 

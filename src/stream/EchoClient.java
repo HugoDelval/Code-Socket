@@ -99,6 +99,7 @@ public class EchoClient extends Thread {
             // on s'est deconnecte du serveur
             connected=false;
             interfaceC.premiereEtape();
+            JOptionPane.showMessageDialog(interfaceC,"Déconnecté");
         }
     }
 
