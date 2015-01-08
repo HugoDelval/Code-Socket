@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * Exemple de serveur TCP multithread.
+ * Serveur TCP multithread.
  *
  * @authors B3424
  * @see stream.ClientThread
@@ -30,7 +30,7 @@ public class EchoServerMultiThreaded extends Thread {
  	/**
   	* Construit une instance de EchoServeurMultiThreaded
 	 *
-	* @param port, String
+	* @param port , String
   	* 
   	**/
 	EchoServerMultiThreaded(String port){
@@ -52,7 +52,7 @@ public class EchoServerMultiThreaded extends Thread {
 	 * Permet d'envoyer une information sous la forme d'une chaine de caracteres
 	 * a tous les clients connectes.
 	 *
-	 * @param commande, String comportant la commande à envoyer.
+	 * @param commande , String comportant la commande à envoyer.
 	 *
 	 **/
 	public void envoyerInfo(String commande){
@@ -129,7 +129,7 @@ public class EchoServerMultiThreaded extends Thread {
 	/**
 	 * Permet de savoir si un client est present dans la liste de clients connectes au serveur.
 	 *
-	 * @param nomDesire, String representant le nom du client.
+	 * @param nomDesire , String representant le nom du client.
 	 * @return Un booleen qui vaut 'true' si le client est absent de la liste des clients connectes
 	 * et qui vaut 'faux' s'il y est present.
 	 */
@@ -147,7 +147,7 @@ public class EchoServerMultiThreaded extends Thread {
 	/**
 	 * Permet de retirer un client de la liste des client connectes.
 	 *
-	 * @param ct, ClientThread
+	 * @param ct , ClientThread
 	 */
 	public void remove(ClientThread ct) {
 		mesClients.remove(ct);
