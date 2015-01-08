@@ -48,20 +48,23 @@ public class ClientThread extends Thread {
 				// Renvoie de la meme chose
 				if(commande.contains("ilveutlhistoriquealorsenvoielui")){
 					envoyerHistorique();
+				}else if(commande.contains("onveutlalistedesutilisateursconnectestp")){
+					envoyerUtilisateurs();
 				}else if (commande.contains("SIGNIN ")) {
 					String nomDesire = commande.substring(7);
 					if(!nomDesire.isEmpty() && parent.estAbsent(nomDesire)){
 						nomClient=nomDesire;
 						parent.envoyerInfo(commande);
-						parent.envoyerListeClients(this);
+//						parent.envoyerListeClients(this);
 						sauvegarderLigne(commande);
 					}else{
 						envoyerInfo("nomimpossibleaattribuerparcequilestdejapris");
 					}
 				}else if(commande.contains("SIGNOUT ")) {
-					parent.envoyerInfo(commande);
-					sauvegarderLigne(commande);
 					nomClient="";
+					parent.envoyerInfo(commande); // tous les clientsThhreads le recoit sauf nous parce que on a plus de nomClient
+					envoyerInfo(commande);        // donc on confirme a notre client qu'il est bien deco
+					sauvegarderLigne(commande);
 				}else if((commande.contains("MESSAGE FROM ") && commande.contains(" TO ") && commande.contains(" CONTENT "))) {
 					String destinataire = commande.substring(commande.indexOf(" TO ") + 4, commande.indexOf(" CONTENT "));
 					if(!destinataire.equals("all") && parent.estAbsent(destinataire)){
@@ -76,9 +79,20 @@ public class ClientThread extends Thread {
 				}
 			}
     	}catch (Exception e) {
-        	System.err.println("Error in ClientThread:" + e);
-			//
+			parent.envoyerInfo("SIGNOUT "+nomClient);
+			sauvegarderLigne("SIGNOUT "+nomClient);
+			nomClient="";
         }
+	}
+
+	private void envoyerUtilisateurs() {
+		String fin ="cestbonjetaienvoyetouslesutilisateurs";
+		String[] users=parent.getUsersName();
+		for(int i=0 ; i< users.length ; i++){
+			if(!users[i].isEmpty())
+				envoyerInfo(users[i]);
+		}
+		envoyerInfo(fin);
 	}
 
 	public void envoyerInfo(String commande)
@@ -104,7 +118,7 @@ public class ClientThread extends Thread {
 		try {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
 			Iterator iterator = fichierHistorique.iterator();
-			String cmd;
+			String cmd="";
 			envoyerInfo("MESSAGE FROM server TO You CONTENT ----------Début de l'historique-----------");
 			while (iterator.hasNext()) {
 				cmd = (String)iterator.next();
