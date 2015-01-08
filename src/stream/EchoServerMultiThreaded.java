@@ -18,7 +18,8 @@ public class EchoServerMultiThreaded extends Thread {
 	public BindException erreurPort;
 
  	/**
-  	* Constructeur de EchoServerMultiThreaded
+  	* Constructeur de EchoServerMultiThreaded :
+	 *
 	* @param port, String
   	* 
   	**/
@@ -27,7 +28,7 @@ public class EchoServerMultiThreaded extends Thread {
 		mesClients = new LinkedList<ClientThread>();
 		try {
 			// Création d'un Socket pour écouter les demandes de connexion sur le serveur
-			listenSocket = new ServerSocket(Integer.parseInt(port)); //port
+			listenSocket = new ServerSocket(Integer.parseInt(port));
 		} catch (BindException e) {
 			// Traitement de l'erreur <BindException> dans l'interface serveur
 			erreurPort = e;
@@ -38,7 +39,7 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode envoyerInfo
+	 * Methode envoyerInfo :
 	 * Permet d'envoyer une information sous la forme d'une chaine de caracteres
 	 * a tous les clients connectes
 	 *
@@ -57,6 +58,12 @@ public class EchoServerMultiThreaded extends Thread {
 		}
 	}
 
+	/**
+	 * Methode run
+	 * Permet de demarrer un thread infini qui va attendre des demandes de connexions au serveur.
+	 * A chaque fois qu'un client demande a se connecter, un nouveau canal de communication entre le serveur et le
+	 * client va etre cree.
+	 */
 	public void run() {
 		try {
 			//System.out.println("Server ready...");
