@@ -3,7 +3,7 @@ package stream;
 /**
  * Lance l'interface client.
  *
- * @authors B3424
+ * @author B3424
  * @see stream.InterfaceClient
  */
 public class ChatClient {

@@ -3,7 +3,7 @@ package stream;
 /**
  * Lance l'interface serveur
  *
- * @authors B3424
+ * @author B3424
  * @see stream.InterfaceServeur
  */
 public class ChatServeur {

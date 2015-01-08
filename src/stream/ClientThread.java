@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Serveur sous forme de thread, cree par EchoServerMultiThreaded
  *
- * @authors B3424
+ * @author B3424
  * @see stream.EchoServerMultiThreaded
  */
 public class ClientThread extends Thread {
@@ -24,7 +24,7 @@ public class ClientThread extends Thread {
 	 */
 	private EchoServerMultiThreaded parent;
 	/**
-	 * Flux d'entrée de l'information venant du Client
+	 * Flux d'entree de l'information venant du Client
 	 */
 	private BufferedReader socIn = null;
 	/**
@@ -97,9 +97,11 @@ public class ClientThread extends Thread {
 				}
 			}
     	}catch (Exception e) {
-			parent.envoyerInfo("SIGNOUT " + nomClient);
-			sauvegarderLigne("SIGNOUT "+nomClient);
-			nomClient="";
+			if(!nomClient.isEmpty()) {
+				parent.envoyerInfo("SIGNOUT " + nomClient);
+				sauvegarderLigne("SIGNOUT " + nomClient);
+				nomClient = "";
+			}
 			deconnecter();
         }
 	}
@@ -119,7 +121,7 @@ public class ClientThread extends Thread {
 
 	/**
 	 * Envoie une chaine de caractere au Client
-	 * @param commande , la chaine de caractere a envoyer
+	 * @param commande la chaine de caractere a envoyer
 	 */
 	public void envoyerInfo(String commande)
 	{
@@ -151,7 +153,7 @@ public class ClientThread extends Thread {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
 			Iterator iterator = fichierHistorique.iterator();
 			String cmd="";
-			envoyerInfo("MESSAGE FROM server TO me CONTENT ----------Début de l'historique-----------");
+			envoyerInfo("MESSAGE FROM server TO me CONTENT ----------Debut de l'historique-----------");
 			while (iterator.hasNext()) {
 				cmd = (String)iterator.next();
 				if(iterator.hasNext())  // on envoie pas la derniere commande car redondant
@@ -168,7 +170,7 @@ public class ClientThread extends Thread {
 
 	/**
 	 * Enregistre une chaine de caracteres dans le fichier de sauvegarde : 'NOM_FICHIER_CONVERSATION'
-	 * @param ligne , la chaine de caracteres a sauvegarder
+	 * @param ligne la chaine de caracteres a sauvegarder
 	 */
 	private void sauvegarderLigne(String ligne){
 		try {

@@ -9,7 +9,7 @@ import javax.swing.text.DefaultCaret;
 /**
  * Interface Graphique de la classe Client
  *
- * @authors B3424
+ * @author B3424
  */
 public class InterfaceClient extends JFrame {
 
@@ -135,8 +135,8 @@ public class InterfaceClient extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
-                if(connecte)
-                    leClient.deconnecter();
+                //if(connecte)
+                  //  leClient.deconnecter();
             }
         });
         utilisateursCo.addMouseListener(new MouseAdapter() {

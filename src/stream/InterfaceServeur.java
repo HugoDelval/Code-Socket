@@ -14,7 +14,7 @@ import javax.swing.border.Border;
 /**
  * Description de l'interface serveur
  *
- * @authors B3424
+ * @author B3424
  */
 public class InterfaceServeur extends JFrame {
 
@@ -43,7 +43,7 @@ public class InterfaceServeur extends JFrame {
         setSize(400, 130);
         // Impossible de redimensionner la fenêtre
         setResizable(false);
-        //Positionner au centre de l'écran la fenêtre
+        //Positionner au centre de l'ecran la fenêtre
         setLocationRelativeTo(null);
         // Termine le processus quand on quitte la fenêtre
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,7 +54,7 @@ public class InterfaceServeur extends JFrame {
         panelPrincipal.add(portServeur);
         panelPrincipal.add(button);
 
-        // La JFrame doit être liée à ce JPanel !
+        // La JFrame doit être liee à ce JPanel !
         setContentPane(panelPrincipal);
 
         // RENDRE VISIBLE LA FENETRE
@@ -82,10 +82,10 @@ public class InterfaceServeur extends JFrame {
      */
     private void clicSurBouton()
     {
-        // Si le serveur est lancé
+        // Si le serveur est lance
         if (connecte)
         {
-            //Changer le texte du boutton et déconnecter le serveur
+            //Changer le texte du boutton et deconnecter le serveur
             button.setText("Lancer le serveur");
             connecte = false;
             monServeur.decoServeur();
@@ -93,10 +93,10 @@ public class InterfaceServeur extends JFrame {
             //Rendre accessible les champs
             portServeur.setEnabled(true);
         }
-        // Si le serveur est arrêté
+        // Si le serveur est arrête
         else
         {
-            // Vérifier que le port entré n'est pas vide
+            // Verifier que le port entre n'est pas vide
             String port = portServeur.getText();
             // Changer le texte du boutton et connecter le serveur
             if (!port.isEmpty())
@@ -104,7 +104,7 @@ public class InterfaceServeur extends JFrame {
                 monServeur = new EchoServerMultiThreaded(port);
                 if (monServeur.erreurPort != null)
                 {
-                    JOptionPane.showMessageDialog(this, "Le port auquel vous tentez d'accéder est déjà occupé. \n" +
+                    JOptionPane.showMessageDialog(this, "Le port auquel vous tentez d'acceder est déjà occupe. \n" +
                                     "Veuillez en utiliser un autre !");
                 }
                 else
