@@ -13,8 +13,19 @@ import java.util.*;
  */
 public class EchoServerMultiThreaded extends Thread {
 
+	/**
+	 * Crée une socket qui va permettre aux serveurs d'écouter et d'accepter les connexions clients.
+	 */
 	private ServerSocket listenSocket;
+
+	/**
+	 * Crée une liste de 'ClientThread' qui va stocker tous les clients connectés au serveur.
+	 */
 	private LinkedList<ClientThread> mesClients;
+
+	/**
+	 * Crée un stockage pour une exception de type BindException
+	 */
 	public BindException erreurPort;
 
  	/**
@@ -39,11 +50,11 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode envoyerInfo :
-	 * Permet d'envoyer une information sous la forme d'une chaine de caracteres
-	 * a tous les clients connectes
+	 * Méthode envoyerInfo :
+	 * Permet d'envoyer une information sous la forme d'une chaîne de caractères
+	 * à tous les clients connectés.
 	 *
-	 * @param commande, String
+	 * @param commande, String comportant la commande à envoyer.
 	 *
 	 **/
 	public void envoyerInfo(String commande){
@@ -59,10 +70,10 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode run
-	 * Permet de demarrer un thread infini qui va attendre des demandes de connexions au serveur.
-	 * A chaque fois qu'un client demande a se connecter, un nouveau canal de communication entre le serveur et le
-	 * client va etre cree.
+	 * Méthode run :
+	 * Permet de démarrer un thread infini qui va attendre des demandes de connexions au serveur.
+	 * A chaque fois qu'un client demande à se connecter, un nouveau canal de communication entre le serveur et le
+	 * client va être créé (communication unique pour chaque client = un thread par client).
 	 */
 	public void run() {
 		try {
@@ -78,14 +89,20 @@ public class EchoServerMultiThreaded extends Thread {
 			}
 		}
 		catch (SocketException e) {
-			// Pas besoin d'envoyer quelque chose, on se déconnecte correctement
+			// Pas besoin d'envoyer une erreur, on se déconnecte correctement
 			//System.out.println("Le serveur est bien déconnecté : " + e);
 		}
 		catch (Exception e) {
-			System.err.println("Erreur lors de l'execution du serveur : " + e);
+			// Traitement du reste des erreurs
+			//System.err.println("Erreur lors de l'execution du serveur : " + e);
 		}
 	}
 
+	/**
+	 * Méthode decoServeur :
+	 * Permet de déconnecter proprement le serveur en déconnectant dans un premier temps tous les
+	 * clients.
+	 */
 	public void decoServeur()
 	{
 		try {
@@ -107,12 +124,20 @@ public class EchoServerMultiThreaded extends Thread {
 				System.out.println("Erreur deconnexion serveur : "+e);
 			}
 
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
+			// Traitement du reste des erreurs
 			System.err.println("Erreur lors de la déconnexion du serveur : " + e);
 		}
 	}
 
+	/**
+	 * Méthode estAbsent :
+	 * Permet de savoir si un client est présent dans la liste de clients connectés au serveur.
+	 *
+	 * @param nomDesire, String représentant le nom du client.
+	 * @return Un booleen qui vaut 'true' si le client est absent de la liste des clients connectés
+	 * et qui vaut 'faux' s'il y est présent.
+	 */
 	public boolean estAbsent(String nomDesire) {
 		boolean res=true;
 		ClientThread c;
@@ -124,11 +149,27 @@ public class EchoServerMultiThreaded extends Thread {
 		return res;
 	}
 
+	/**
+	 * Méthode remove :
+	 * Permet de retirer un client de la liste des client connectés.
+	 *
+	 * @param ct, ClientThread
+	 */
 	public void remove(ClientThread ct) {
 		mesClients.remove(ct);
 	}
 
+	/**
+	 * Méthode getUserName :
+	 * Permet d'envoyer les noms des clients connectés afin que le client puisse voir quelles personnes
+	 * sont connectées au chat.
+	 *
+	 * @return Un tableau de String qui stocke tous les noms des clients connectés.
+	 * @see stream.ClientThread
+	 * @see stream.EchoClient
+	 */
 	public String[] getUsersName() {
+		// Création d'un tableau de la taille de la liste des clients connectés stockés dans un LinkedList
 		String [] res = new String[mesClients.size()];
 		int i=0;
 		ClientThread c;
