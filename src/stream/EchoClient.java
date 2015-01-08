@@ -83,9 +83,9 @@ public class EchoClient extends Thread {
                             String destinataire = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" TO ") + 4, commandeUtilisateur.indexOf(" CONTENT "));
                             String msg = commandeUtilisateur.substring(commandeUtilisateur.indexOf(" CONTENT ") + 8);
                             if (expediteur.equals(nomUtilisateur))
-                                expediteur = "You";
+                                expediteur = "me";
                             if (destinataire.equals(nomUtilisateur))
-                                destinataire = "You";
+                                destinataire = "me";
                             interfaceC.envoyerInfo(expediteur + " > " + destinataire + " : " + msg + '\r' + '\n');
                         }else if (commandeUtilisateur.contains("cestlafindelhistoriquetupeuxarreterdesimuler")) {
                             historiqueEnCours = false;
