@@ -36,3 +36,9 @@ SIGNOUT usernam
 SIGNOUT 
 SIGNOUT username
 SIGNOUT 
+SIGNIN username
+SIGNIN Ophélie
+SIGNOUT Ophélie
+SIGNOUT 
+SIGNOUT username
+SIGNOUT 

@@ -1,49 +1,59 @@
-/***
- * EchoServer
- * Example of a TCP server
- * Date: 10/01/04
- * Authors:
- */
-
 package stream;
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
-public class EchoServerMultiThreaded  extends Thread{
+/**
+ * EchoServerMultiThreaded
+ * Exemple de serveur TCP multithread
+ *
+ * @authors B3424
+ * @see stream.ClientThread
+ */
+public class EchoServerMultiThreaded extends Thread {
 
 	private ServerSocket listenSocket;
 	private LinkedList<ClientThread> mesClients;
 	public BindException erreurPort;
+
  	/**
-  	* main method
+  	* Constructeur de EchoServerMultiThreaded
 	* @param port, String
   	* 
   	**/
 	EchoServerMultiThreaded(String port){
 		erreurPort = null;
+		mesClients = new LinkedList<ClientThread>();
 		try {
 			// Création d'un Socket pour écouter les demandes de connexion sur le serveur
 			listenSocket = new ServerSocket(Integer.parseInt(port)); //port
 		} catch (BindException e) {
-			// Traitement de l'erreur dans l'interface serveur
+			// Traitement de l'erreur <BindException> dans l'interface serveur
 			erreurPort = e;
 		} catch (IOException e) {
+			// Traitement du reste des erreurs
 			System.err.println("Erreur de construction de EchoServerMultiThreaded :" + e);
 		}
-		mesClients=new LinkedList<ClientThread>();
-
 	}
 
+	/**
+	 * Methode envoyerInfo
+	 * Permet d'envoyer une information sous la forme d'une chaine de caracteres
+	 * a tous les clients connectes
+	 *
+	 * @param commande, String
+	 *
+	 **/
 	public void envoyerInfo(String commande){
 		ClientThread c;
 		Iterator iterator = mesClients.iterator();
 		while(iterator.hasNext()){
 			c = (ClientThread)iterator.next();
-			if(!c.getNomClient().isEmpty()) // si le client a un nom = si il est connecte
+			//
+			if(!c.getNomClient().isEmpty()) {
 				c.envoyerInfo(commande);
+			}
 		}
 	}
 
