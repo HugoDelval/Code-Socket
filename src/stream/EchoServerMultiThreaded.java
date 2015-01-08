@@ -28,7 +28,7 @@ public class EchoServerMultiThreaded extends Thread {
 	public BindException erreurPort;
 
  	/**
-  	* Constructeur de EchoServerMultiThreaded :
+  	* Construit une instance de EchoServeurMultiThreaded
 	 *
 	* @param port, String
   	* 
@@ -49,7 +49,6 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode envoyerInfo :
 	 * Permet d'envoyer une information sous la forme d'une chaine de caracteres
 	 * a tous les clients connectes.
 	 *
@@ -69,7 +68,6 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode run :
 	 * Permet de demarrer un thread infini qui va attendre des demandes de connexions au serveur.
 	 * A chaque fois qu'un client demande à se connecter, un nouveau canal de communication entre le serveur et le
 	 * client va être cree (communication unique pour chaque client = un thread par client).
@@ -98,7 +96,6 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode decoServeur :
 	 * Permet de deconnecter proprement le serveur en deconnectant dans un premier temps tous les
 	 * clients.
 	 */
@@ -130,7 +127,6 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode estAbsent :
 	 * Permet de savoir si un client est present dans la liste de clients connectes au serveur.
 	 *
 	 * @param nomDesire, String representant le nom du client.
@@ -149,7 +145,6 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode remove :
 	 * Permet de retirer un client de la liste des client connectes.
 	 *
 	 * @param ct, ClientThread
@@ -159,7 +154,6 @@ public class EchoServerMultiThreaded extends Thread {
 	}
 
 	/**
-	 * Methode getUserName :
 	 * Permet d'envoyer les noms des clients connectes afin que le client puisse voir quelles personnes
 	 * sont connectees au chat.
 	 *
