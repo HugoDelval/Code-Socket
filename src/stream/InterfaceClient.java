@@ -1,15 +1,16 @@
 package stream;
 
-/**
- * Created by Ophélie on 12/12/2014.
- */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import javax.swing.text.DefaultCaret;
 
+/**
+ * Interface Graphique de la classe Client
+ *
+ * @authors B3424
+ */
 public class InterfaceClient extends JFrame {
 
     private JList<String> utilisateursCo = new JList<String>();

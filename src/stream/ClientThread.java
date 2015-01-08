@@ -1,10 +1,3 @@
-/***
- * ClientThread
- * Example of a TCP server
- * Date: 14/12/08
- * Authors:
- */
-
 package stream;
 
 import java.io.*;
@@ -15,17 +8,43 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Serveur sous forme de thread, cree par EchoServerMultiThreaded
+ *
+ * @authors B3424
+ * @see stream.EchoServerMultiThreaded
+ */
 public class ClientThread extends Thread {
-	
+	/**
+	 * Le socket du client, permettant de communique avec lui
+	 */
 	private Socket clientSocket;
+	/**
+	 * le createur de ce thread, permettant d'appeler des methodes de 'EchoServerMultiThreaded' , relayant des informations a tous les threads
+	 */
 	private EchoServerMultiThreaded parent;
-	// Flux d'entrée du point de vue Client
-	BufferedReader socIn = null;
-	// Flux de sortie du point de vue Client
-	PrintStream socOut = null;
+	/**
+	 * Flux d'entrée de l'information venant du Client
+	 */
+	private BufferedReader socIn = null;
+	/**
+	 * Flux de sortie de l'information vers le Client
+	 */
+	private PrintStream socOut = null;
+	/**
+	 * Nom du fichier contenant l'historique des conversations
+	 */
 	private final String NOM_FICHIER_CONVERSATION ="sauvegarde_conversations.txt";
+	/**
+	 * Le nom du client avec lequel on communique (si connu)
+	 */
 	private String nomClient="";
 
+	/**
+	 * Constructeur de la classe. Initialise les Flux et les autres attributs
+	 * @param s , Le socket permettant de communiquer avec le Client
+	 * @param p , Serveur Global, le parent de ce thread
+	 */
 	ClientThread(Socket s, EchoServerMultiThreaded p) {
 		try {
 			this.clientSocket = s;
@@ -37,10 +56,9 @@ public class ClientThread extends Thread {
 		}
 	}
 
- 	/**
-  	* receives a request from client then sends an echo to the client
-  	* @param clientSocket the client socket
-  	**/
+	/**
+	 * Methode principale du thread, ecoute le flux d'entree et en deduit des commandes a envoyer au Client et/ou au serveur global.
+	 */
 	public void run() {
 		try {
     		while (true) {
@@ -79,13 +97,16 @@ public class ClientThread extends Thread {
 				}
 			}
     	}catch (Exception e) {
-			parent.envoyerInfo("SIGNOUT "+nomClient);
+			parent.envoyerInfo("SIGNOUT " + nomClient);
 			sauvegarderLigne("SIGNOUT "+nomClient);
 			nomClient="";
-			parent.remove(this);
+			deconnecter();
         }
 	}
 
+	/**
+	 * Envoie la liste des utilisateurs connectes au Client
+	 */
 	private void envoyerUtilisateurs() {
 		String fin ="cestbonjetaienvoyetouslesutilisateurs";
 		String[] users=parent.getUsersName();
@@ -96,6 +117,10 @@ public class ClientThread extends Thread {
 		envoyerInfo(fin);
 	}
 
+	/**
+	 * Envoie une chaine de caractere au Client
+	 * @param commande , la chaine de caractere a envoyer
+	 */
 	public void envoyerInfo(String commande)
 	{
 		if(!commande.isEmpty()){
@@ -103,8 +128,11 @@ public class ClientThread extends Thread {
 		}
 	}
 
+	/**
+	 * Deconnecte cet objet du client puis demande au Serveur global de le supprimer
+	 */
 	public void deconnecter(){
-		System.out.println("Deconnection ClientThread");
+		//System.out.println("Deconnection ClientThread");
 		try {
 			socOut.close();
 			socIn.close();
@@ -115,6 +143,9 @@ public class ClientThread extends Thread {
 		}
 	}
 
+	/**
+	 * Envoie l'historique des messages contenu dans le fichier 'NOM_FICHIER_CONVERSATION' au Client
+	 */
 	private void envoyerHistorique() {
 		try {
 			List<String> fichierHistorique = Files.readAllLines(Paths.get(NOM_FICHIER_CONVERSATION), StandardCharsets.UTF_8);
@@ -135,6 +166,10 @@ public class ClientThread extends Thread {
 		}
 	}
 
+	/**
+	 * Enregistre une chaine de caracteres dans le fichier de sauvegarde : 'NOM_FICHIER_CONVERSATION'
+	 * @param ligne , la chaine de caracteres a sauvegarder
+	 */
 	private void sauvegarderLigne(String ligne){
 		try {
 			PrintWriter writer = new PrintWriter(new FileWriter(NOM_FICHIER_CONVERSATION, true));
@@ -149,6 +184,10 @@ public class ClientThread extends Thread {
 		}
 	}
 
+	/**
+	 * Getteur du nomClient
+	 * @return le nom du client
+	 */
 	public String getNomClient(){
 		return nomClient;
 	}

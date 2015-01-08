@@ -33,7 +33,7 @@ public class InterfaceServeur extends JFrame {
     private boolean connecte = false;
 
     /**
-     * Construit une instance de InterfaceServeur
+     * Construit une instance de InterfaceServeur, initialise les composants graphiques et les listeners
      */
     public InterfaceServeur() {
         // CREATION DE LA FENETRE
