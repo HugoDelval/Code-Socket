@@ -42,3 +42,6 @@ SIGNOUT Ophélie
 SIGNOUT 
 SIGNOUT username
 SIGNOUT 
+SIGNIN username
+SIGNOUT username
+SIGNOUT 
