@@ -1,53 +1,15 @@
 SIGNIN username
-SIGNIN usernam
-SIGNOUT username
-SIGNOUT usernam
-SIGNIN username
-SIGNIN usernam
-SIGNOUT usernam
-SIGNOUT 
 SIGNOUT username
 SIGNOUT 
-SIGNIN username
-SIGNIN usernam
-SIGNOUT username
-SIGNOUT 
-SIGNOUT usernam
 SIGNOUT 
 SIGNIN username
-SIGNIN usernam
-MESSAGE FROM usernam TO usernam CONTENT  message
-MESSAGE FROM usernam TO username CONTENT  message
-SIGNOUT usernam
-SIGNOUT 
+MESSAGE FROM username TO username CONTENT  message
 SIGNOUT username
 SIGNOUT 
 SIGNIN username
 SIGNOUT username
-SIGNOUT 
 SIGNIN username
 SIGNOUT username
 SIGNOUT 
-SIGNIN username
-SIGNIN usernam
-MESSAGE FROM usernam TO all CONTENT  message
-MESSAGE FROM username TO usernam CONTENT  message
-SIGNOUT usernam
 SIGNOUT 
-SIGNOUT username
-SIGNOUT 
-SIGNIN username
-SIGNIN Ophélie
-SIGNOUT Ophélie
-SIGNOUT 
-SIGNOUT username
-SIGNOUT 
-SIGNIN username
-SIGNOUT username
-SIGNOUT 
-SIGNIN username
-SIGNOUT username
-SIGNOUT 
-SIGNIN username
-SIGNOUT username
 SIGNOUT 
