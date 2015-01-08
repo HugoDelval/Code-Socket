@@ -12,13 +12,9 @@ import javax.swing.text.DefaultCaret;
 
 public class InterfaceClient extends JFrame {
 
-    // Gerer la liste des personnes connectees
     private JList<String> utilisateursCo = new JList<String>();
     JScrollPane scrollUtilisateursCo = new JScrollPane(utilisateursCo);
-
-    // CrÃ©er JPanel qui va contenir la liste et l'historique de messages
     private JPanel histoPlusUtilisateurs = new JPanel();
-
     private JPanel panelPrincipal = new JPanel();
     private JTextField message = new JTextField("",41);
     private JTextArea historiqueMessages = new JTextArea(18, 30);
@@ -34,10 +30,18 @@ public class InterfaceClient extends JFrame {
     private JButton buttonCmdSend = new JButton("cmd SEND");
     private JButton buttonCmdDisconnect = new JButton("cmd DISCONNECT");
 
-    //avec le server
+    /**
+     * boolean permettant de savoir si le client est connu par le serveur (connecte en termes de socket)
+     */
     private boolean connecte=false;
+    /**
+     * L'objet représentant le Client avec lequel l'interface interagit
+     */
     private EchoClient leClient;
 
+    /**
+     * constructeur de l'interface, initialise les composants graphiques et les evenements
+     */
     public InterfaceClient () {
         /**
          *  Constructeur :
@@ -145,27 +149,39 @@ public class InterfaceClient extends JFrame {
             }
         });
 
-
         setContentPane(panelPrincipal);
         premiereEtape();
         setVisible(true);
     }
 
+    /**
+     * Pre-complete la zone de saisie avec la commande sendto
+     */
     private void buttonCmdSendCliked() {
         message.setText("SENDTO [all | username] CONTENT message");
         message.requestFocus();
     }
 
+    /**
+     * Pre-complete la zone de saisie avec la commande connect
+     */
     private void buttonCmdConnectCliked() {
         message.setText("CONNECT username");
         message.requestFocus();
     }
 
+    /**
+     * Pre-complete la zone de saisie avec la commande disconnect
+     */
     private void buttonCmdDisconnectCliked() {
         message.setText("QUIT");
         message.requestFocus();
     }
 
+    /**
+     * Connecte ou deconnecte le client du serveur (en terme de socket)
+     * change les composants graphiques en fonction de si le client est connecte/deconnecte
+     */
     private void buttonConnectCliked(){
         // Bouton Connecter/Deconnecter a été cliqué
         if(connecte){
@@ -195,6 +211,9 @@ public class InterfaceClient extends JFrame {
         }
     }
 
+    /**
+     * composants graphiques tels qu'ils sont avant la connexion au serveur (connexion en terme de socket)
+     */
     public void premiereEtape() {
         connecte=false;
         buttonConnect.setText("Connexion Serveur");
@@ -210,6 +229,9 @@ public class InterfaceClient extends JFrame {
         message.setEnabled(false);
     }
 
+    /**
+     * composants graphiques tels qu'ils sont pendant connexion au serveur (connexion en terme de socket)
+     */
     public void secondeEtape() {
         connecte = true;
         buttonConnect.setText("Deconnexion");
@@ -223,6 +245,9 @@ public class InterfaceClient extends JFrame {
         message.setEnabled(true);
     }
 
+    /**
+     * Envoi au serveur la commande tape dans la zone de saisie en verifiant que vous pouvez bien l'envoyer
+     */
     private void buttonEnvoiCliked(){
         // Bouton envoye a été cliqué
         if(connecte){
@@ -234,10 +259,18 @@ public class InterfaceClient extends JFrame {
         }
     }
 
+    /**
+     * Complete la zone d'historique des messages avec la chaine 'info'
+     * @param info , La chaine de caractere a ajouter dans la zone des anciens messages
+     */
     public void envoyerInfo(String info){
         historiqueMessages.setText(historiqueMessages.getText()+info);
     }
 
+    /**
+     * Permet d'afficher les Clients connectes
+     * @param info , Le tableau de String correspondant aux clients connectes qui apparaitront dans la zone de la jList 'utilisateursCo'
+     */
     public void envoyerClientsCo (String[] info) {
         utilisateursCo.setListData(info);
 
