@@ -197,7 +197,7 @@ public class InterfaceClient extends JFrame {
                     leClient.start();
                     historiqueMessages.setText("");
                     secondeEtape();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     JOptionPane.showMessageDialog(this,
                             "Impossible de se connecter au Serveur demandé.",
                             "Inane error",
